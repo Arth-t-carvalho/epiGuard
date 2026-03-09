@@ -6,7 +6,7 @@ namespace App\Domain\Entity;
 
 use DateTimeImmutable;
 
-class Course
+class Department
 {
     private ?int $id;
     private string $name;

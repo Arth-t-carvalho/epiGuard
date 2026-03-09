@@ -6,7 +6,7 @@ namespace App\Application\DTO\Request;
 
 class CreateOccurrenceRequest
 {
-    public int $studentId;
+    public int $employeeId;
     public int $registeredById;
     public int $epiItemId;
     public string $type;
@@ -15,7 +15,7 @@ class CreateOccurrenceRequest
     public array $evidences = [];
 
     public function __construct(
-        int $studentId,
+        int $employeeId,
         int $registeredById,
         int $epiItemId,
         string $type,
@@ -24,7 +24,7 @@ class CreateOccurrenceRequest
         array $evidences = []
         )
     {
-        $this->studentId = $studentId;
+        $this->employeeId = $employeeId;
         $this->registeredById = $registeredById;
         $this->epiItemId = $epiItemId;
         $this->type = $type;

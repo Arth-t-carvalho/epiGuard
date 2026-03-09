@@ -17,8 +17,8 @@ class OccurrenceValidator
     {
         $errors = [];
 
-        if ($request->studentId <= 0) {
-            $errors['studentId'] = 'Valid student ID is required.';
+        if ($request->employeeId <= 0) {
+            $errors['employeeId'] = 'Valid employee ID is required.';
         }
 
         if ($request->epiItemId <= 0) {

@@ -6,19 +6,19 @@ namespace App\Application\DTO\Response;
 
 class DashboardSummary
 {
-    public int $totalStudents;
+    public int $totalEmployees;
     public int $totalOccurrences;
     public int $openOccurrences;
     public int $resolvedOccurrences;
 
     public function __construct(
-        int $totalStudents = 0,
+        int $totalEmployees = 0,
         int $totalOccurrences = 0,
         int $openOccurrences = 0,
         int $resolvedOccurrences = 0
         )
     {
-        $this->totalStudents = $totalStudents;
+        $this->totalEmployees = $totalEmployees;
         $this->totalOccurrences = $totalOccurrences;
         $this->openOccurrences = $openOccurrences;
         $this->resolvedOccurrences = $resolvedOccurrences;

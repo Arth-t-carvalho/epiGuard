@@ -4,16 +4,16 @@ declare(strict_types = 1)
 
 namespace App\Application\Validator;
 
-use App\Application\DTO\Request\CreateStudentRequest;
+use App\Application\DTO\Request\CreateEmployeeRequest;
 use App\Domain\Exception\ValidationException;
 
-class StudentValidator
+class EmployeeValidator
 {
     /**
-     * @param CreateStudentRequest $request
+     * @param CreateEmployeeRequest $request
      * @throws ValidationException
      */
-    public function validateCreation(CreateStudentRequest $request): void
+    public function validateCreation(CreateEmployeeRequest $request): void
     {
         $errors = [];
 
@@ -29,8 +29,8 @@ class StudentValidator
             $errors['enrollmentNumber'] = 'Enrollment number is required.';
         }
 
-        if ($request->courseId <= 0) {
-            $errors['courseId'] = 'Valid course ID is required.';
+        if ($request->departmentId <= 0) {
+            $errors['departmentId'] = 'Valid department ID is required.';
         }
 
         if ($request->email !== null && !filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
@@ -38,7 +38,7 @@ class StudentValidator
         }
 
         if (!empty($errors)) {
-            throw new ValidationException('Student validation failed.', $errors);
+            throw new ValidationException('Employee validation failed.', $errors);
         }
     }
 }

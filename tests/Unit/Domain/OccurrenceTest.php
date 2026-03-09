@@ -4,10 +4,10 @@ declare(strict_types = 1)
 
 namespace Tests\Unit\Domain;
 
-use App\Domain\Entity\Course;
+use App\Domain\Entity\Department;
 use App\Domain\Entity\EpiItem;
 use App\Domain\Entity\Occurrence;
-use App\Domain\Entity\Student;
+use App\Domain\Entity\Employee;
 use App\Domain\Entity\User;
 use App\Domain\ValueObject\CPF;
 use App\Domain\ValueObject\Email;
@@ -21,17 +21,17 @@ class OccurrenceTest extends TestCase
 {
     public function testCanCreateAndChangeStatusOfOccurrence(): void
     {
-        $course = new Course('Test', 'T01');
-        $student = new Student('Student Test', new CPF('12345678909'), '001', $course);
+        $department = new Department('Test', 'T01');
+        $employee = new Employee('Employee Test', new CPF('12345678909'), '001', $department);
         $user = new User('Admin', new Email('admin@test.com'), 'hash', new UserRole('admin'));
         $epi = new EpiItem('Safety Glasses');
 
         $occurrence = new Occurrence(
-            $student,
+            $employee,
             $user,
             $epi,
             new OccurrenceType('missing_epi'),
-            'Student was working without safety glasses.',
+            'Employee was working without safety glasses.',
             new DateTimeImmutable()
             );
 

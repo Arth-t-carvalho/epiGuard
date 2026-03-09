@@ -4,26 +4,26 @@ declare(strict_types = 1)
 
 namespace App\Application\DTO\Request;
 
-class CreateStudentRequest
+class CreateEmployeeRequest
 {
     public string $name;
     public string $cpf;
     public string $enrollmentNumber;
-    public int $courseId;
+    public int $departmentId;
     public ?string $email;
 
     public function __construct(
         string $name,
         string $cpf,
         string $enrollmentNumber,
-        int $courseId,
+        int $departmentId,
         ?string $email = null
         )
     {
         $this->name = $name;
         $this->cpf = $cpf;
         $this->enrollmentNumber = $enrollmentNumber;
-        $this->courseId = $courseId;
+        $this->departmentId = $departmentId;
         $this->email = $email;
     }
 }

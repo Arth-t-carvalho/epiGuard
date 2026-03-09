@@ -5,25 +5,25 @@ declare(strict_types = 1)
 namespace App\Application\Service;
 
 use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\StudentRepositoryInterface;
+use App\Domain\Repository\EmployeeRepositoryInterface;
 
 class ReportService
 {
     private OccurrenceRepositoryInterface $occurrenceRepository;
-    private StudentRepositoryInterface $studentRepository;
+    private EmployeeRepositoryInterface $employeeRepository;
 
     public function __construct(
         OccurrenceRepositoryInterface $occurrenceRepository,
-        StudentRepositoryInterface $studentRepository
+        EmployeeRepositoryInterface $employeeRepository
         )
     {
         $this->occurrenceRepository = $occurrenceRepository;
-        $this->studentRepository = $studentRepository;
+        $this->employeeRepository = $employeeRepository;
     }
 
-    public function generateStudentReport(int $studentId): array
+    public function generateEmployeeReport(int $employeeId): array
     {
-        // Return a structured array or a Report DTO based on all occurrences of a student.
+        // Return a structured array or a Report DTO based on all occurrences of a employee.
         return [];
     }
 

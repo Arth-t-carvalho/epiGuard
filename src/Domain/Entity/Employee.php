@@ -8,14 +8,14 @@ use App\Domain\ValueObject\CPF;
 use App\Domain\ValueObject\Email;
 use DateTimeImmutable;
 
-class Student
+class Employee
 {
     private ?int $id;
     private string $name;
     private CPF $cpf;
     private ?Email $email;
     private string $enrollmentNumber;
-    private Course $course;
+    private Department $department;
     private DateTimeImmutable $createdAt;
     private ?DateTimeImmutable $updatedAt;
 
@@ -23,7 +23,7 @@ class Student
         string $name,
         CPF $cpf,
         string $enrollmentNumber,
-        Course $course,
+        Department $department,
         ?Email $email = null,
         ?int $id = null,
         ?DateTimeImmutable $createdAt = null,
@@ -33,7 +33,7 @@ class Student
         $this->name = $name;
         $this->cpf = $cpf;
         $this->enrollmentNumber = $enrollmentNumber;
-        $this->course = $course;
+        $this->department = $department;
         $this->email = $email;
         $this->id = $id;
         $this->createdAt = $createdAt ?? new DateTimeImmutable();
@@ -70,9 +70,9 @@ class Student
         return $this->enrollmentNumber;
     }
 
-    public function getCourse(): Course
+    public function getDepartment(): Department
     {
-        return $this->course;
+        return $this->department;
     }
 
     public function getCreatedAt(): DateTimeImmutable

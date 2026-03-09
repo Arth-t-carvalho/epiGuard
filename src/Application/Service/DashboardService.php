@@ -6,26 +6,26 @@ namespace App\Application\Service;
 
 use App\Application\DTO\Response\DashboardSummary;
 use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\StudentRepositoryInterface;
+use App\Domain\Repository\EmployeeRepositoryInterface;
 use App\Domain\ValueObject\OccurrenceStatus;
 
 class DashboardService
 {
-    private StudentRepositoryInterface $studentRepository;
+    private EmployeeRepositoryInterface $employeeRepository;
     private OccurrenceRepositoryInterface $occurrenceRepository;
 
     public function __construct(
-        StudentRepositoryInterface $studentRepository,
+        EmployeeRepositoryInterface $employeeRepository,
         OccurrenceRepositoryInterface $occurrenceRepository
         )
     {
-        $this->studentRepository = $studentRepository;
+        $this->employeeRepository = $employeeRepository;
         $this->occurrenceRepository = $occurrenceRepository;
     }
 
     public function getSummary(): DashboardSummary
     {
-        $students = $this->studentRepository->findAll();
+        $employees = $this->employeeRepository->findAll();
         $occurrences = $this->occurrenceRepository->findAll();
 
         $openOccurrencesCount = 0;
@@ -41,7 +41,7 @@ class DashboardService
         }
 
         return new DashboardSummary(
-            count($students),
+            count($employees),
             count($occurrences),
             $openOccurrencesCount,
             $resolvedOccurrencesCount

@@ -11,7 +11,7 @@ use DateTimeImmutable;
 class Occurrence
 {
     private ?int $id;
-    private Student $student;
+    private Employee $employee;
     private User $registeredBy;
     private EpiItem $epiItem;
     private OccurrenceType $type;
@@ -28,7 +28,7 @@ class Occurrence
     private array $actions = [];
 
     public function __construct(
-        Student $student,
+        Employee $employee,
         User $registeredBy,
         EpiItem $epiItem,
         OccurrenceType $type,
@@ -40,7 +40,7 @@ class Occurrence
         ?DateTimeImmutable $updatedAt = null
         )
     {
-        $this->student = $student;
+        $this->employee = $employee;
         $this->registeredBy = $registeredBy;
         $this->epiItem = $epiItem;
         $this->type = $type;
@@ -62,9 +62,9 @@ class Occurrence
         $this->id = $id;
     }
 
-    public function getStudent(): Student
+    public function getEmployee(): Employee
     {
-        return $this->student;
+        return $this->employee;
     }
 
     public function getRegisteredBy(): User

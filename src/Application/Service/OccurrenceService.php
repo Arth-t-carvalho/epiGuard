@@ -11,10 +11,10 @@ use App\Domain\Entity\Occurrence;
 use App\Domain\Entity\OccurrenceAction;
 use App\Domain\Exception\DomainException;
 use App\Domain\Exception\InvalidOccurrenceException;
-use App\Domain\Exception\StudentNotFoundException;
+use App\Domain\Exception\EmployeeNotFoundException;
 use App\Domain\Repository\EpiRepositoryInterface;
 use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\StudentRepositoryInterface;
+use App\Domain\Repository\EmployeeRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\ValueObject\ActionType;
 use App\Domain\ValueObject\OccurrenceStatus;
@@ -24,21 +24,21 @@ use DateTimeImmutable;
 class OccurrenceService
 {
     private OccurrenceRepositoryInterface $occurrenceRepository;
-    private StudentRepositoryInterface $studentRepository;
+    private EmployeeRepositoryInterface $employeeRepository;
     private UserRepositoryInterface $userRepository;
     private EpiRepositoryInterface $epiRepository;
     private OccurrenceValidator $validator;
 
     public function __construct(
         OccurrenceRepositoryInterface $occurrenceRepository,
-        StudentRepositoryInterface $studentRepository,
+        EmployeeRepositoryInterface $employeeRepository,
         UserRepositoryInterface $userRepository,
         EpiRepositoryInterface $epiRepository,
         OccurrenceValidator $validator
         )
     {
         $this->occurrenceRepository = $occurrenceRepository;
-        $this->studentRepository = $studentRepository;
+        $this->employeeRepository = $employeeRepository;
         $this->userRepository = $userRepository;
         $this->epiRepository = $epiRepository;
         $this->validator = $validator;
@@ -53,9 +53,9 @@ class OccurrenceService
     {
         $this->validator->validateCreation($request);
 
-        $student = $this->studentRepository->findById($request->studentId);
-        if (!$student) {
-            throw StudentNotFoundException::withId($request->studentId);
+        $employee = $this->employeeRepository->findById($request->employeeId);
+        if (!$employee) {
+            throw EmployeeNotFoundException::withId($request->employeeId);
         }
 
         $registeredBy = $this->userRepository->findById($request->registeredById);
@@ -72,7 +72,7 @@ class OccurrenceService
         $date = DateTimeImmutable::createFromFormat('Y-m-d', $request->date);
 
         $occurrence = new Occurrence(
-            $student,
+            $employee,
             $registeredBy,
             $epiItem,
             $occurrenceType,

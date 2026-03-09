@@ -7,8 +7,8 @@ namespace App\Application\DTO\Response;
 class OccurrenceDetail
 {
     public int $id;
-    public string $studentName;
-    public string $studentCourse;
+    public string $employeeName;
+    public string $employeeDepartment;
     public string $registeredBy;
     public string $epiItem;
     public string $type;
@@ -20,8 +20,8 @@ class OccurrenceDetail
 
     public function __construct(
         int $id,
-        string $studentName,
-        string $studentCourse,
+        string $employeeName,
+        string $employeeDepartment,
         string $registeredBy,
         string $epiItem,
         string $type,
@@ -33,8 +33,8 @@ class OccurrenceDetail
         )
     {
         $this->id = $id;
-        $this->studentName = $studentName;
-        $this->studentCourse = $studentCourse;
+        $this->employeeName = $employeeName;
+        $this->employeeDepartment = $employeeDepartment;
         $this->registeredBy = $registeredBy;
         $this->epiItem = $epiItem;
         $this->type = $type;

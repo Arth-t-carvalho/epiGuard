@@ -4,26 +4,26 @@ declare(strict_types = 1)
 
 namespace App\Application\DTO\Response;
 
-class StudentListItem
+class EmployeeListItem
 {
     public int $id;
     public string $name;
     public string $enrollmentNumber;
-    public string $courseCode;
+    public string $departmentCode;
     public int $occurrencesCount;
 
     public function __construct(
         int $id,
         string $name,
         string $enrollmentNumber,
-        string $courseCode,
+        string $departmentCode,
         int $occurrencesCount = 0
         )
     {
         $this->id = $id;
         $this->name = $name;
         $this->enrollmentNumber = $enrollmentNumber;
-        $this->courseCode = $courseCode;
+        $this->departmentCode = $departmentCode;
         $this->occurrencesCount = $occurrencesCount;
     }
 }

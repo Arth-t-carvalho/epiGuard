@@ -16,10 +16,10 @@ interface OccurrenceRepositoryInterface
     public function findAll(): array;
 
     /**
-     * @param int $studentId
+     * @param int $employeeId
      * @return Occurrence[]
      */
-    public function findByStudentId(int $studentId): array;
+    public function findByEmployeeId(int $employeeId): array;
 
     /**
      * @param string $status
