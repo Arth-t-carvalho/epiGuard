@@ -36,25 +36,40 @@
                     <p>Insira as suas credenciais administrativas.</p>
                 </div>
 
-                <form id="register-form">
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger" style="color: #e31e24; margin-bottom: 15px; font-weight: 600;">
+                        <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <form id="register-form" method="POST" action="<?= BASE_PATH ?>/register">
                     <div class="input-group">
                         <label for="fullname">NOME COMPLETO</label>
-                        <input type="text" id="fullname" placeholder="Ex: Arthur Silva" required>
+                        <input type="text" id="fullname" name="nome" placeholder="Ex: Arthur Silva" required>
                     </div>
 
                     <div class="input-group">
                         <label for="username">GMAIL OU CPF</label>
-                        <input type="text" id="username" placeholder="exemplo@gmail.com ou CPF" required>
+                        <input type="text" id="username" name="usuario" placeholder="exemplo@gmail.com ou CPF" required>
                     </div>
 
                     <div class="input-group">
                         <label for="password">SENHA</label>
                         <div class="password-wrapper">
-                            <input type="password" id="password" placeholder="••••••••" required>
+                            <input type="password" id="password" name="senha" placeholder="••••••••" required>
                             <button type="button" id="toggle-password" class="toggle-password">
                                 <i class="fa-regular fa-eye-slash"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cargo">CARGO</label>
+                        <select name="cargo" id="cargo" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #E9EDF7; background: #F4F7FE; font-weight: 600; color: #1B2559;">
+                            <option value="GERENTE_SEGURANCA">Gerente de Segurança</option>
+                            <option value="SUPERVISOR">Supervisor</option>
+                            <option value="SUPER_ADMIN">Super Admin</option>
+                        </select>
                     </div>
 
                     <button type="submit" class="btn-login btn-register">

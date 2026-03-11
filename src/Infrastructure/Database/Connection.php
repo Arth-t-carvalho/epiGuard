@@ -17,9 +17,10 @@ class Connection
             $host = 'localhost';
             $user = 'root';
             $pass = '';
+            $port = '3308';
             $db   = 'epi_guard';
 
-            self::$instance = new mysqli($host, $user, $pass, $db);
+            self::$instance = new mysqli($host, $user, $pass, $db, $port);
 
             if (self::$instance->connect_error) {
                 throw new Exception("Falha na conexão MySQLi: " . self::$instance->connect_error);

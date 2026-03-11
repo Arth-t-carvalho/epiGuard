@@ -55,16 +55,28 @@
                     <p>Insira as suas credenciais administrativas.</p>
                 </div>
 
-                <form id="login-form">
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger" style="color: #e31e24; margin-bottom: 15px; font-weight: 600;">
+                        <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success" style="color: #28a745; margin-bottom: 15px; font-weight: 600;">
+                        <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <form id="login-form" method="POST" action="<?= BASE_PATH ?>/login">
                     <div class="input-group">
                         <label for="username">GMAIL OU CPF</label>
-                        <input type="text" id="username" placeholder="exemplo@gmail.com ou CPF" required>
+                        <input type="text" id="username" name="usuario" placeholder="exemplo@gmail.com ou CPF" required>
                     </div>
 
                     <div class="input-group">
                         <label for="password">SENHA</label>
                         <div class="password-wrapper">
-                            <input type="password" id="password" placeholder="••••••••" required>
+                            <input type="password" id="password" name="senha" placeholder="••••••••" required>
                             <button type="button" id="toggle-password" class="toggle-password">
                                 <i class="fa-regular fa-eye-slash"></i>
                             </button>

@@ -1,20 +1,23 @@
-<header class="top-bar">
-    <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar alunos ou ocorrências...">
+<header class="header">
+    <div class="page-title">
+        <h1>Dashboard</h1>
+        <p>Olá Arthur, bem-vindo de volta!</p>
     </div>
 
-    <div class="user-profile">
-        <div class="notifications">
-            <i class="fa-regular fa-bell"></i>
-            <span class="badge">3</span>
-        </div>
-        <div class="profile-info">
-            <span class="user-name">Admin SENAI</span>
-            <span class="user-role">Super Admin</span>
-        </div>
-        <div class="profile-pic">
-            <i class="fa-solid fa-user-tie"></i>
+    <div class="header-actions">
+        <!-- Ícones extras se desejar, mas seguindo o novo CSS: -->
+        <button class="btn-export">
+            <i class="fa-solid fa-download"></i> Exportar
+        </button>
+        
+        <div class="user-profile-trigger">
+            <div class="user-info-mini">
+                <span class="user-name">arthur</span>
+                <span class="user-role">Super_admin</span>
+            </div>
+            <div class="user-avatar">
+                AR
+            </div>
         </div>
     </div>
 </header>

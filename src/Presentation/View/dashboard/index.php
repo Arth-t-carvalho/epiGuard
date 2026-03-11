@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>epiGuard - Dashboard</title>
-    <!-- Google Fonts -->
+    <title>epiGuard - Painel Geral</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/sidebar.css">
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/dashboard.css">
+    
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -20,100 +25,114 @@
         <main class="main-content">
             <?php include __DIR__ . '/../layout/header.php'; ?>
 
-            <div class="content-body">
-                <div class="welcome-section">
-                    <h1>Olá, <span class="highlight">Admin</span></h1>
-                    <p>Aqui está o resumo da segurança industrial hoje.</p>
-                </div>
+            <!-- Global Variables for JS -->
+            <script>
+                window.BASE_PATH = '<?= BASE_PATH ?>';
+                window.userRole = '<?= $_SESSION['user_cargo'] ?? 'instrutor' ?>';
+                window.totalStudents = 100; // Mock total students
+            </script>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <span class="label">Total de Alunos</span>
-                            <span class="value">1,248</span>
-                        </div>
-                        <div class="stat-icon blue">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <span class="label">Alunos Conformes</span>
-                            <span class="value">98%</span>
-                        </div>
-                        <div class="stat-icon green">
-                            <i class="fa-solid fa-check-double"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <span class="label">Ocorrências Hoje</span>
-                            <span class="value">12</span>
-                        </div>
-                        <div class="stat-icon red">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <span class="label">EPIs Ativos</span>
-                            <span class="value">458</span>
-                        </div>
-                        <div class="stat-icon purple">
-                            <i class="fa-solid fa-helmet-safety"></i>
-                        </div>
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card card">
+                    <span class="kpi-header">INFRAÇÕES HOJE</span>
+                    <div class="kpi-value">
+                        <span id="kpiDia">0</span>
+                        <span class="badge" id="badgeDia">0%</span>
                     </div>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="grid-card recent-occurrences">
-                        <div class="card-header">
-                            <h3>Ocorrências Recentes</h3>
-                            <a href="#" class="btn-link">Ver todas</a>
-                        </div>
-                        <div class="card-body">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Aluno</th>
-                                        <th>Tipo</th>
-                                        <th>Horário</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Arthur Silva</td>
-                                        <td>Ausência de Luva</td>
-                                        <td>08:45</td>
-                                        <td><span class="badge warning">Pendente</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria Clara</td>
-                                        <td>Capacete Desajustado</td>
-                                        <td>09:12</td>
-                                        <td><span class="badge success">Resolvido</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>João Pedro</td>
-                                        <td>Óculos de Proteção</td>
-                                        <td>09:30</td>
-                                        <td><span class="badge danger">Crítico</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="kpi-card card">
+                    <span class="kpi-header">INFRAÇÕES SEMANA</span>
+                    <div class="kpi-value">
+                        <span id="kpiSemana">0</span>
+                        <span class="badge" id="badgeSemana">0%</span>
                     </div>
+                </div>
 
-                    <div class="grid-card safety-monitoring">
-                        <div class="card-header">
-                            <h3>Monitoramento Facial</h3>
-                            <span class="pulse-icon"><i class="fa-solid fa-circle"></i> LIVE</span>
+                <div class="kpi-card card">
+                    <span class="kpi-header">INFRAÇÕES MÊS</span>
+                    <div class="kpi-value">
+                        <span id="kpiMes">0</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card card">
+                    <span class="kpi-header">CONFORMIDADE</span>
+                    <div class="kpi-value">
+                        <span id="kpiMedia">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CHART -->
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3>Visão Geral Trimestral</h3>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <!-- BOTTOM GRID -->
+            <div class="chart-grid">
+                <!-- Registro Diário -->
+                <div class="card">
+                    <div class="section-header">
+                        <h3 class="section-title">Registro Diário</h3>
+                        <button class="calendar-trigger" onclick="toggleCalendar()">
+                            <i data-lucide="calendar"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-nav" onclick="toggleCalendar()"
+                        onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
+
+                        <button class="nav-btn" onclick="event.stopPropagation(); changeDay(-1)">❮</button>
+
+                        <div class="date-display"
+                            style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            <div id="displayDayNum"
+                                style="color: #E30613; font-size: 28px; font-weight: 800; line-height: 1;">
+                                --
+                            </div>
+                            <div id="displayMonthStr" style="color: #64748B; font-size: 13px; font-weight: 600;">
+                                --
+                            </div>
+
+                            <div
+                                style="font-size: 10px; color: #E30613; font-weight: 700; margin-top: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <span style="font-size: 8px;"></span> Clique para expandir
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="monitoring-placeholder">
-                                <i class="fa-solid fa-camera"></i>
-                                <p>Câmera Central Ativa</p>
+
+                        <button class="nav-btn" onclick="event.stopPropagation(); changeDay(1)">❯</button>
+                    </div>
+                    <div class="occurrences-list" id="occurrenceList">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Donut Chart -->
+                <div class="card">
+                    <div class="section-header">
+                        <h3 class="section-title">Distribuição de EPIs</h3>
+                    </div>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Infrações (Placeholder) -->
+                <div class="card">
+                    <div class="section-header">
+                        <h3 class="section-title">Top Ocorrências</h3>
+                    </div>
+                    <div class="infraction-list" id="topInfractions">
+                        <div class="list-item">
+                            <span class="occ-name">Placeholder</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%;"></div>
                             </div>
                         </div>
                     </div>
@@ -122,5 +141,49 @@
         </main>
     </div>
 
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="modal-calendar">
+        <div class="modal-content">
+            <div class="calendar-header">
+                <button id="prevMonth"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="month-selector">
+                    <span id="calMonthDisplay">Janeiro</span>
+                    <span id="calYearDisplay">2026</span>
+                </div>
+                <button id="nextMonth"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <ul class="weeks">
+                <li>Dom</li><li>Seg</li><li>Ter</li><li>Qua</li><li>Qui</li><li>Sex</li><li>Sáb</li>
+            </ul>
+            <ul class="days" id="calendarDays"></ul>
+            <div class="manual-input">
+                <div class="input-wrapper">
+                    <input type="text" id="manualDateInput" placeholder="DD/MM/AAAA">
+                    <button onclick="commitManualDate()"><i data-lucide="check"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="modalMonthTitle">Detalhes</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="custom-table">
+                    <thead><tr></tr></thead>
+                    <tbody id="modalTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="<?= BASE_PATH ?>/assets/js/dashboard.js"></script>
 </body>
 </html>
