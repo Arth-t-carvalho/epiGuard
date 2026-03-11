@@ -18,6 +18,20 @@ spl_autoload_register(function ($class) {
     if (file_exists($file)) require $file;
 });
 
+// Autoloader para classes do Domínio e Aplicação (namespace App\)
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $base_dir = __DIR__ . '/src/';
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) return;
+    $relative_class = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    if (file_exists($file)) require $file;
+});
+
+
+session_start();
+
 // Carregar configurações
 $config = require_once __DIR__ . '/config/app.php';
 
@@ -41,14 +55,29 @@ if ($basePath !== '' && strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
 }
 
+// Suporte para quando index.php está na URL (caso o mod_rewrite não esteja ativo)
+$path = str_replace('/index.php', '', $path);
+
+// Remove query strings
+$path = explode('?', $path)[0];
+
 if ($path === '' || $path === '/') $path = '/login';
 
-if (isset($routes[$path])) {
-    [$controllerClass, $method] = $routes[$path];
-    $controller = new $controllerClass();
-    $controller->$method();
-} else {
-    header("HTTP/1.0 404 Not Found");
-    echo "<h1>404 - Página não encontrada</h1>";
-    echo "<p>Caminho requisitado: " . htmlspecialchars($path) . "</p>";
+try {
+    if (isset($routes[$path])) {
+        [$controllerClass, $method] = $routes[$path];
+        $controller = new $controllerClass();
+        $controller->$method();
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        require_once __DIR__ . '/src/Presentation/View/auth/login.php'; // Fallback ou página 404
+        // echo "<h1>404 - Página não encontrada</h1>";
+        // echo "<p>Caminho requisitado: " . htmlspecialchars($path) . "</p>";
+    }
+} catch (Exception $e) {
+    echo "<div style='background: #f8d7da; color: #721c24; padding: 20px; border: 1px solid #f5c6cb; border-radius: 5px; font-family: sans-serif; margin: 20px;'>";
+    echo "<h3>Erro do Sistema</h3>";
+    echo "<p>Mensagem: " . $e->getMessage() . "</p>";
+    echo "<p>Arquivo: " . $e->getFile() . " na linha " . $e->getLine() . "</p>";
+    echo "</div>";
 }
