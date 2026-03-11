@@ -1,0 +1,331 @@
+:root {
+    --facchini-red: #E31E24;
+    --facchini-dark-red: #B3171B;
+    --bg-light: #F0F2F5;
+    --text-dark: #1A1D23;
+    --text-muted: #64748B;
+    --white: #FFFFFF;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Inicia fora da tela à direita */
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--facchini-red) 0%, var(--facchini-dark-red) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: right 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.splash-screen.active {
+    right: 0;
+}
+
+.splash-content {
+    text-align: center;
+    color: var(--white);
+}
+
+.facchini-logo {
+    font-family: 'Outfit', sans-serif;
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 5px;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards 0.5s;
+}
+
+.splash-subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeIn 0.8s forwards 0.8s;
+}
+
+.loading-container {
+    width: 300px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.8s forwards 1s;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--white);
+    transition: width 0.1s linear;
+}
+
+.enter-system {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 12px 30px;
+    border: 2px solid var(--white);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.enter-system:hover {
+    background: var(--white);
+    color: var(--facchini-red);
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0;
+}
+
+/* Login Container */
+.login-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E2E2E2;
+}
+
+.login-card {
+    display: flex;
+    width: 900px;
+    height: 550px;
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-premium);
+    overflow: hidden;
+    animation: scaleIn 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.login-sidebar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--facchini-red) 0%, var(--facchini-dark-red) 100%);
+    padding: 40px;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+}
+
+.epi-logo-circle {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid var(--white);
+    border-radius: 50%;
+}
+
+.epi-brand {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.sidebar-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.facchini-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+}
+
+.sidebar-text {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    opacity: 0.9;
+    max-width: 300px;
+}
+
+.login-form-area {
+    flex: 1;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-header {
+    margin-bottom: 40px;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: var(--text-muted);
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #F8FAFC;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--facchini-red);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.1);
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, #FF4B50 0%, #B3171B 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 10px 20px -5px rgba(227, 30, 36, 0.4);
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -10px rgba(227, 30, 36, 0.5);
+}
+
+.form-footer {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.link-forgot {
+    display: block;
+    color: var(--facchini-red);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.form-footer p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.link-register {
+    color: var(--facchini-red);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
