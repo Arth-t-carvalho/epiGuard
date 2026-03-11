@@ -1,142 +1,163 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 CREATE SCHEMA IF NOT EXISTS epi_guard DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE epi_guard ;
+USE epi_guard;
 
 -- -----------------------------------------------------
--- 1. Cursos
+-- 1. SETORES
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.cursos (
-  id INT(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS setores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
-  sigla VARCHAR(10) NULL DEFAULT NULL,
-  status ENUM('ATIVO', 'INATIVO') NOT NULL DEFAULT 'ATIVO',
+  sigla VARCHAR(10),
+  status ENUM('ATIVO','INATIVO') NOT NULL DEFAULT 'ATIVO',
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 2. FUNCIONARIOS
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS funcionarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  setor_id INT,
+  turno ENUM('MANHA','TARDE','NOITE','INTEGRAL'),
+  foto_referencia VARCHAR(255) COMMENT 'Caminho da foto para reconhecimento facial',
+  status ENUM('ATIVO','INATIVO','AFASTADO') NOT NULL DEFAULT 'ATIVO',
+  status_epi ENUM('CONFORME','NAO_CONFORME') NOT NULL DEFAULT 'CONFORME',
+  ultima_atualizacao_status DATETIME DEFAULT CURRENT_TIMESTAMP,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  INDEX idx_funcionario_setor (setor_id),
+  CONSTRAINT fk_funcionario_setor 
+    FOREIGN KEY (setor_id) 
+    REFERENCES setores(id) 
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 2. Alunos
+-- 3. TIPOS DE EPI
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.alunos (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  nome VARCHAR(100) NOT NULL,
-  curso_id INT(11) NULL DEFAULT NULL,
-  turno ENUM('MANHA', 'TARDE', 'NOITE', 'INTEGRAL') NULL DEFAULT NULL,
-  caminho_foto_referencia VARCHAR(255) NULL DEFAULT NULL COMMENT 'URL ou path da imagem, evitar BLOB',
-  status ENUM('ATIVO', 'INATIVO', 'TRANCADO') NOT NULL DEFAULT 'ATIVO',
-  status_epi ENUM('CONFORME', 'NAO_CONFORME') NOT NULL DEFAULT 'CONFORME',
-  ultima_atualizacao_status DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  INDEX (curso_id ASC),
-  CONSTRAINT fk_alunos_curso FOREIGN KEY (curso_id) REFERENCES epi_guard.cursos (id) ON DELETE SET NULL
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+CREATE TABLE IF NOT EXISTS epis (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(80) NOT NULL,
+  descricao TEXT,
+  status ENUM('ATIVO','INATIVO') NOT NULL DEFAULT 'ATIVO'
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 3. EPIs
+-- 4. OCORRENCIAS DE SEGURANÇA
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.epis (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  nome VARCHAR(50) NOT NULL,
-  status ENUM('ATIVO', 'INATIVO') NOT NULL DEFAULT 'ATIVO',
-  PRIMARY KEY (id)
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
-
--- -----------------------------------------------------
--- 4. Ocorrências
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.ocorrencias (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  aluno_id INT(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS ocorrencias (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  funcionario_id INT NOT NULL,
   data_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  tipo ENUM('INFRACAO', 'CONFORMIDADE') NOT NULL DEFAULT 'INFRACAO',
+  tipo ENUM('INFRACAO','CONFORMIDADE') NOT NULL,
   oculto BOOLEAN NOT NULL DEFAULT FALSE,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  INDEX (aluno_id ASC),
-  CONSTRAINT fk_ocorrencias_aluno FOREIGN KEY (aluno_id) REFERENCES epi_guard.alunos (id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  INDEX idx_ocorrencia_funcionario (funcionario_id),
+  INDEX idx_ocorrencia_data (data_hora),
+  CONSTRAINT fk_ocorrencia_funcionario
+    FOREIGN KEY (funcionario_id)
+    REFERENCES funcionarios(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 5. Ocorrencia_EPIs (Tabela de Ligação N:N)
+-- 5. RELAÇÃO OCORRÊNCIA - EPIs
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.ocorrencia_epis (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  ocorrencia_id INT(11) NOT NULL,
-  epi_id INT(11) NOT NULL,
-  PRIMARY KEY (id),
-  INDEX (ocorrencia_id ASC),
-  INDEX (epi_id ASC),
-  CONSTRAINT fk_ocorrencia_epis_ocorrencia FOREIGN KEY (ocorrencia_id) REFERENCES epi_guard.ocorrencias (id) ON DELETE CASCADE,
-  CONSTRAINT fk_ocorrencia_epis_epi FOREIGN KEY (epi_id) REFERENCES epi_guard.epis (id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+CREATE TABLE IF NOT EXISTS ocorrencia_epis (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ocorrencia_id INT NOT NULL,
+  epi_id INT NOT NULL,
+  INDEX idx_ocorrencia (ocorrencia_id),
+  INDEX idx_epi (epi_id),
+  CONSTRAINT fk_ocorrencia_epi_ocorrencia
+    FOREIGN KEY (ocorrencia_id)
+    REFERENCES ocorrencias(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_ocorrencia_epi_epi
+    FOREIGN KEY (epi_id)
+    REFERENCES epis(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 6. Usuários
+-- 6. USUARIOS DO SISTEMA
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.usuarios (
-  id INT(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
   usuario VARCHAR(50) NOT NULL,
-  senha VARCHAR(255) NOT NULL COMMENT 'Armazenar como HASH (Bcrypt/Argon2)',
-  cargo ENUM('SUPER_ADMIN', 'SUPERVISOR', 'PROFESSOR') NOT NULL,
-  turno ENUM('MANHA', 'TARDE', 'NOITE', 'INTEGRAL') NULL DEFAULT NULL,
-  curso_id INT(11) NULL DEFAULT NULL,
-  status ENUM('ATIVO', 'INATIVO') NOT NULL DEFAULT 'ATIVO',
+  senha VARCHAR(255) NOT NULL COMMENT 'Hash Bcrypt ou Argon2',
+  cargo ENUM('SUPER_ADMIN','SUPERVISOR','GERENTE_SEGURANCA') NOT NULL,
+  setor_id INT,
+  turno ENUM('MANHA','TARDE','NOITE','INTEGRAL'),
+  status ENUM('ATIVO','INATIVO') NOT NULL DEFAULT 'ATIVO',
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE INDEX (usuario ASC),
-  INDEX (curso_id ASC),
-  CONSTRAINT fk_usuario_curso FOREIGN KEY (curso_id) REFERENCES epi_guard.cursos (id) ON DELETE SET NULL
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_usuario (usuario),
+  INDEX idx_usuario_setor (setor_id),
+  CONSTRAINT fk_usuario_setor
+    FOREIGN KEY (setor_id)
+    REFERENCES setores(id)
+    ON DELETE SET NULL
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 7. Ações Ocorrência
+-- 7. AÇÕES DISCIPLINARES
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.acoes_ocorrencia (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  ocorrencia_id INT(11) NOT NULL,
-  usuario_id INT(11) NOT NULL,
-  tipo ENUM('OBSERVACAO', 'ADVERTENCIA_VERBAL', 'ADVERTENCIA_ESCRITA', 'SUSPENSAO') NOT NULL,
-  observacao TEXT NULL DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS acoes_ocorrencia (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ocorrencia_id INT NOT NULL,
+  usuario_id INT NOT NULL,
+  tipo ENUM('OBSERVACAO','ADVERTENCIA_VERBAL','ADVERTENCIA_ESCRITA','SUSPENSAO') NOT NULL,
+  observacao TEXT,
   data_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  INDEX (ocorrencia_id ASC),
-  INDEX (usuario_id ASC),
-  CONSTRAINT fk_acoes_ocorrencia FOREIGN KEY (ocorrencia_id) REFERENCES epi_guard.ocorrencias (id) ON DELETE CASCADE,
-  CONSTRAINT fk_acoes_usuario FOREIGN KEY (usuario_id) REFERENCES epi_guard.usuarios (id) ON DELETE RESTRICT
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  INDEX idx_acao_ocorrencia (ocorrencia_id),
+  INDEX idx_acao_usuario (usuario_id),
+  CONSTRAINT fk_acao_ocorrencia
+    FOREIGN KEY (ocorrencia_id)
+    REFERENCES ocorrencias(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_acao_usuario
+    FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id)
+    ON DELETE RESTRICT
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 8. Amostras Facial
+-- 8. AMOSTRAS FACIAIS
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.amostras_facial (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  aluno_id INT(11) NOT NULL,
-  caminho_imagem VARCHAR(255) NOT NULL COMMENT 'Caminho da imagem',
+CREATE TABLE IF NOT EXISTS amostras_faciais (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  funcionario_id INT NOT NULL,
+  caminho_imagem VARCHAR(255) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  INDEX (aluno_id ASC),
-  CONSTRAINT fk_amostras_aluno FOREIGN KEY (aluno_id) REFERENCES epi_guard.alunos (id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  INDEX idx_amostra_funcionario (funcionario_id),
+  CONSTRAINT fk_amostra_funcionario
+    FOREIGN KEY (funcionario_id)
+    REFERENCES funcionarios(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 9. Evidências
+-- 9. EVIDENCIAS
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS epi_guard.evidencias (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  ocorrencia_id INT(11) NOT NULL,
-  caminho_imagem VARCHAR(255) NOT NULL COMMENT 'Caminho da imagem',
+CREATE TABLE IF NOT EXISTS evidencias (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ocorrencia_id INT NOT NULL,
+  caminho_imagem VARCHAR(255) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  INDEX (ocorrencia_id ASC),
-  CONSTRAINT fk_evidencias_ocorrencia FOREIGN KEY (ocorrencia_id) REFERENCES epi_guard.ocorrencias (id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+  INDEX idx_evidencia_ocorrencia (ocorrencia_id),
+  CONSTRAINT fk_evidencia_ocorrencia
+    FOREIGN KEY (ocorrencia_id)
+    REFERENCES ocorrencias(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

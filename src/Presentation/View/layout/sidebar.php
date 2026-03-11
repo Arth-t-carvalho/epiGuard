@@ -1,54 +1,96 @@
+<?php
+// Detectar página atual para marcar como ativa
+$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$basePath = defined('BASE_PATH') ? BASE_PATH : '';
+$currentRoute = str_replace($basePath, '', $currentPath);
+?>
 <aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="epi-logo-circle"></div>
-        <span class="epi-brand">EPI GUARD</span>
+    <div class="brand">
+        <div class="logo-circle"></div>
+        EPI <span>GUARD</span>
     </div>
 
-    <nav class="sidebar-nav">
-        <ul>
-            <li class="active">
-                <a href="<?= BASE_PATH ?>/dashboard">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-user-graduate"></i>
-                    <span>Alunos</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-book"></i>
-                    <span>Cursos</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>Ocorrências</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-helmet-safety"></i>
-                    <span>EPIs</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <span>Usuários</span>
-                </a>
-            </li>
-        </ul>
+    <nav class="nav-menu">
+        <a href="<?= BASE_PATH ?>/dashboard" class="nav-item <?= ($currentRoute === '/dashboard') ? 'active' : '' ?>">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i data-lucide="monitor"></i>
+            <span>Monitoramento</span>
+        </a>
+        <a href="<?= BASE_PATH ?>/infractions" class="nav-item <?= ($currentRoute === '/infractions') ? 'active' : '' ?>">
+            <i data-lucide="alert-triangle"></i>
+            <span>Infrações</span>
+        </a>
+        <a href="<?= BASE_PATH ?>/management/departments" class="nav-item <?= (strpos($currentRoute, '/management') === 0) ? 'active' : '' ?>">
+            <i data-lucide="building-2"></i>
+            <span>Gestão de Setor</span>
+        </a>
+        <a href="<?= BASE_PATH ?>/management/departments" class="nav-item <?= (strpos($currentRoute, '/management') === 0) ? 'active' : '' ?>">
+            <i data-lucide="file-text"></i>
+            <span>Ocorrências</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i data-lucide="settings"></i>
+            <span>Configurações</span>
+        </a>
     </nav>
 
-    <div class="sidebar-footer">
-        <a href="<?= BASE_PATH ?>/login" class="btn-logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Sair</span>
-        </a>
+    <div class="ai-assistant-container">
+        <button class="ai-toggle-btn" onclick="toggleAiChat()">
+            <i data-lucide="sparkles"></i>
+            <span>Assistente IA</span>
+        </button>
+
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <span>🤖 Assistente IA</span>
+                <button onclick="toggleAiChat()">&times;</button>
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message bot">Olá! Como posso ajudar você com o EPI Guard hoje?</div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" id="aiChatInput" placeholder="Digite sua pergunta..." onkeypress="if(event.key==='Enter') sendAiMessage()">
+                <button onclick="sendAiMessage()">
+                    <i data-lucide="send" style="width:16px;height:16px;"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </aside>
+
+<script>
+    // --- AI Chat Toggle ---
+    function toggleAiChat() {
+        const chatWindow = document.getElementById('aiChatWindow');
+        chatWindow.classList.toggle('open');
+    }
+
+    function sendAiMessage() {
+        const input = document.getElementById('aiChatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const messagesDiv = document.getElementById('aiChatMessages');
+
+        // User message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'ai-message user';
+        userMsg.textContent = msg;
+        messagesDiv.appendChild(userMsg);
+
+        input.value = '';
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        // Bot response (simulated)
+        setTimeout(() => {
+            const botMsg = document.createElement('div');
+            botMsg.className = 'ai-message bot';
+            botMsg.textContent = 'Entendido! Estou processando sua solicitação...';
+            messagesDiv.appendChild(botMsg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }, 800);
+    }
+</script>
