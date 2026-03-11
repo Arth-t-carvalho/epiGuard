@@ -77,7 +77,7 @@
 
                     <div class="form-footer">
                         <a href="#" class="link-forgot">Esqueceu a senha?</a>
-                        <p>Não tem uma conta? <a href="#" class="link-register">Cadastre-se</a></p>
+                        <p>Não tem uma conta? <a href="<?= BASE_PATH ?>/register" class="link-register">Cadastre-se</a></p>
                     </div>
                 </form>
             </div>

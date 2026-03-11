@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Simular autenticação e redirecionamento
         setTimeout(() => {
             alert('Autenticação realizada com sucesso! Redirecionando para o dashboard...');
-            // window.location.href = '/epiGuard/epiGuard/public/dashboard';
+            window.location.href = './dashboard';
         }, 1500);
     });
 });
