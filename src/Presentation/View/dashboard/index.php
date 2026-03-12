@@ -25,114 +25,116 @@
         <main class="main-content">
             <?php include __DIR__ . '/../layout/header.php'; ?>
 
-            <!-- Global Variables for JS -->
-            <script>
-                window.BASE_PATH = '<?= BASE_PATH ?>';
-                window.userRole = '<?= $_SESSION['user_cargo'] ?? 'instrutor' ?>';
-                window.totalStudents = 100; // Mock total students
-            </script>
+            <div id="page-content-wrapper" class="content-fade">
+                <!-- Global Variables for JS -->
+                <script>
+                    window.BASE_PATH = '<?= BASE_PATH ?>';
+                    window.userRole = '<?= $_SESSION['user_cargo'] ?? 'instrutor' ?>';
+                    window.totalStudents = 100; // Mock total students
+                </script>
 
-            <!-- KPI CARDS -->
-            <div class="kpi-grid">
-                <div class="kpi-card card">
-                    <span class="kpi-header">INFRAÇÕES HOJE</span>
-                    <div class="kpi-value">
-                        <span id="kpiDia">0</span>
-                        <span class="badge" id="badgeDia">0%</span>
-                    </div>
-                </div>
-
-                <div class="kpi-card card">
-                    <span class="kpi-header">INFRAÇÕES SEMANA</span>
-                    <div class="kpi-value">
-                        <span id="kpiSemana">0</span>
-                        <span class="badge" id="badgeSemana">0%</span>
-                    </div>
-                </div>
-
-                <div class="kpi-card card">
-                    <span class="kpi-header">INFRAÇÕES MÊS</span>
-                    <div class="kpi-value">
-                        <span id="kpiMes">0</span>
-                    </div>
-                </div>
-
-                <div class="kpi-card card">
-                    <span class="kpi-header">CONFORMIDADE</span>
-                    <div class="kpi-value">
-                        <span id="kpiMedia">0%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN CHART -->
-            <div class="chart-card card">
-                <div class="chart-header">
-                    <h3>Visão Geral Trimestral</h3>
-                </div>
-                <div class="chart-container" style="height: 300px;">
-                    <canvas id="mainChart"></canvas>
-                </div>
-            </div>
-
-            <!-- BOTTOM GRID -->
-            <div class="chart-grid">
-                <!-- Registro Diário -->
-                <div class="card">
-                    <div class="section-header">
-                        <h3 class="section-title">Registro Diário</h3>
-                        <button class="calendar-trigger" onclick="toggleCalendar()">
-                            <i data-lucide="calendar"></i>
-                        </button>
-                    </div>
-                    <div class="calendar-nav" onclick="toggleCalendar()"
-                        onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
-
-                        <button class="nav-btn" onclick="event.stopPropagation(); changeDay(-1)">❮</button>
-
-                        <div class="date-display"
-                            style="text-align: center; display: flex; flex-direction: column; align-items: center;">
-                            <div id="displayDayNum"
-                                style="color: #E30613; font-size: 28px; font-weight: 800; line-height: 1;">
-                                --
-                            </div>
-                            <div id="displayMonthStr" style="color: #64748B; font-size: 13px; font-weight: 600;">
-                                --
-                            </div>
-
-                            <div
-                                style="font-size: 10px; color: #E30613; font-weight: 700; margin-top: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <span style="font-size: 8px;"></span> Clique para expandir
-                            </div>
+                <!-- KPI CARDS -->
+                <div class="kpi-grid">
+                    <div class="kpi-card card">
+                        <span class="kpi-header">INFRAÇÕES HOJE</span>
+                        <div class="kpi-value">
+                            <span id="kpiDia">0</span>
+                            <span class="badge" id="badgeDia">0%</span>
                         </div>
-
-                        <button class="nav-btn" onclick="event.stopPropagation(); changeDay(1)">❯</button>
                     </div>
-                    <div class="occurrences-list" id="occurrenceList">
-                        <!-- Filled by JS -->
+
+                    <div class="kpi-card card">
+                        <span class="kpi-header">INFRAÇÕES SEMANA</span>
+                        <div class="kpi-value">
+                            <span id="kpiSemana">0</span>
+                            <span class="badge" id="badgeSemana">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card card">
+                        <span class="kpi-header">INFRAÇÕES MÊS</span>
+                        <div class="kpi-value">
+                            <span id="kpiMes">0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card card">
+                        <span class="kpi-header">CONFORMIDADE</span>
+                        <div class="kpi-value">
+                            <span id="kpiMedia">0%</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Donut Chart -->
-                <div class="card">
-                    <div class="section-header">
-                        <h3 class="section-title">Distribuição de EPIs</h3>
+                <!-- MAIN CHART -->
+                <div class="chart-card card">
+                    <div class="chart-header">
+                        <h3>Visão Geral Trimestral</h3>
                     </div>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="doughnutChart"></canvas>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="mainChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Top Infrações (Placeholder) -->
-                <div class="card">
-                    <div class="section-header">
-                        <h3 class="section-title">Top Ocorrências</h3>
+                <!-- BOTTOM GRID -->
+                <div class="chart-grid">
+                    <!-- Registro Diário -->
+                    <div class="card">
+                        <div class="section-header">
+                            <h3 class="section-title">Registro Diário</h3>
+                            <button class="calendar-trigger" onclick="toggleCalendar()">
+                                <i data-lucide="calendar"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-nav" onclick="toggleCalendar()"
+                            onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
+
+                            <button class="nav-btn" onclick="event.stopPropagation(); changeDay(-1)">❮</button>
+
+                            <div class="date-display"
+                                style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                                <div id="displayDayNum"
+                                    style="color: #E30613; font-size: 28px; font-weight: 800; line-height: 1;">
+                                    --
+                                </div>
+                                <div id="displayMonthStr" style="color: #64748B; font-size: 13px; font-weight: 600;">
+                                    --
+                                </div>
+
+                                <div
+                                    style="font-size: 10px; color: #E30613; font-weight: 700; margin-top: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                    <span style="font-size: 8px;"></span> Clique para expandir
+                                </div>
+                            </div>
+
+                            <button class="nav-btn" onclick="event.stopPropagation(); changeDay(1)">❯</button>
+                        </div>
+                        <div class="occurrences-list" id="occurrenceList">
+                            <!-- Filled by JS -->
+                        </div>
                     </div>
-                    <div class="infraction-list" id="topInfractions">
-                        <div class="list-item">
-                            <span class="occ-name">Placeholder</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 50%;"></div>
+
+                    <!-- Donut Chart -->
+                    <div class="card">
+                        <div class="section-header">
+                            <h3 class="section-title">Distribuição de EPIs</h3>
+                        </div>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="doughnutChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Infrações (Placeholder) -->
+                    <div class="card">
+                        <div class="section-header">
+                            <h3 class="section-title">Top Ocorrências</h3>
+                        </div>
+                        <div class="infraction-list" id="topInfractions">
+                            <div class="list-item">
+                                <span class="occ-name">Placeholder</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>

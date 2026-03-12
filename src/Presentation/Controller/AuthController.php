@@ -3,7 +3,10 @@
 namespace epiGuard\Presentation\Controller;
 
 use epiGuard\Infrastructure\Database\Connection;
-use epiGuard\Infrastructure\Persistence\MySQLUserRepository;
+use App\Infrastructure\Persistence\MySQLUserRepository;
+use App\Domain\Entity\User;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\UserRole;
 
 class AuthController
 {
@@ -11,8 +14,7 @@ class AuthController
 
     public function __construct()
     {
-        $db = Connection::getInstance();
-        $this->userRepository = new MySQLUserRepository($db);
+        $this->userRepository = new MySQLUserRepository();
     }
 
     public function index()
@@ -38,7 +40,7 @@ class AuthController
         $nome = $_POST['nome'] ?? '';
         $usuario = $_POST['usuario'] ?? '';
         $senha = $_POST['senha'] ?? '';
-        $cargo = $_POST['cargo'] ?? 'SUPERVISOR'; // Padrão
+        $cargo = $_POST['cargo'] ?? 'OPERATOR'; // Padrão da nova arquitetura
 
         if (empty($nome) || empty($usuario) || empty($senha)) {
             $_SESSION['error'] = "Todos os campos são obrigatórios.";
@@ -46,22 +48,31 @@ class AuthController
             exit;
         }
 
-        // Criptografar senha
-        $hashedPassword = password_hash($senha, PASSWORD_BCRYPT);
-
-        $userData = [
-            'nome' => $nome,
-            'usuario' => $usuario,
-            'senha' => $hashedPassword,
-            'cargo' => $cargo
-        ];
-
         try {
-            if ($this->userRepository->save($userData)) {
-                $_SESSION['success'] = "Cadastro realizado com sucesso! Faça login.";
-                header("Location: " . BASE_PATH . "/login");
-                exit;
+            // Mapear cargo do formulário para UserRole da arquitetura
+            $mappedRole = UserRole::VIEWER;
+            if ($cargo === 'SUPER_ADMIN') {
+                $mappedRole = UserRole::ADMIN;
+            } elseif ($cargo === 'SUPERVISOR' || $cargo === 'GERENTE_SEGURANCA') {
+                $mappedRole = UserRole::OPERATOR;
             }
+
+            // Criptografar senha
+            $hashedPassword = password_hash($senha, PASSWORD_BCRYPT);
+
+            // Criar entidade de domínio
+            $user = new User(
+                name: $nome,
+                email: new Email($usuario),
+                passwordHash: $hashedPassword,
+                role: new UserRole($mappedRole)
+            );
+
+            $this->userRepository->save($user);
+            
+            $_SESSION['success'] = "Cadastro realizado com sucesso! Faça login.";
+            header("Location: " . BASE_PATH . "/login");
+            exit;
         } catch (\Exception $e) {
             $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
             header("Location: " . BASE_PATH . "/register");
@@ -80,18 +91,33 @@ class AuthController
             exit;
         }
 
-        $user = $this->userRepository->findByUsername($usuario);
+        try {
+            $user = $this->userRepository->findByUsername($usuario);
 
-        if ($user && password_verify($senha, $user['senha'])) {
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_nome'] = $user['nome'];
-            $_SESSION['user_cargo'] = $user['cargo'];
-            
-            header("Location: " . BASE_PATH . "/dashboard");
-            exit;
-        } else {
-            $_SESSION['error'] = "Usuário ou senha incorretos.";
+            if (!$user) {
+                $_SESSION['error'] = "Usuário não encontrado ou inativo.";
+                header("Location: " . BASE_PATH . "/login");
+                exit;
+            }
+
+            if (password_verify($senha, $user->getPasswordHash())) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['user_id'] = $user->getId();
+                $_SESSION['user_nome'] = $user->getName();
+                $_SESSION['user_cargo'] = $user->getRole()->getValue();
+                
+                header("Location: " . BASE_PATH . "/dashboard");
+                exit;
+            } else {
+                $_SESSION['error'] = "Senha incorreta.";
+                header("Location: " . BASE_PATH . "/login");
+                exit;
+            }
+        } catch (\Exception $e) {
+            error_log("Login Exception: " . $e->getMessage());
+            $_SESSION['error'] = "Erro interno no servidor. Tente novamente mais tarde.";
             header("Location: " . BASE_PATH . "/login");
             exit;
         }

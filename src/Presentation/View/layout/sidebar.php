@@ -61,6 +61,8 @@ $currentRoute = str_replace($basePath, '', $currentPath);
     </div>
 </aside>
 
+<script src="<?= BASE_PATH ?>/assets/js/navigation.js"></script>
+
 <script>
     // --- AI Chat Toggle ---
     function toggleAiChat() {
