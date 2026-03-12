@@ -32,10 +32,10 @@ class DashboardService
         $resolvedOccurrencesCount = 0;
 
         foreach ($occurrences as $occurrence) {
-            if ($occurrence->getStatus()->isOpen() || $occurrence->getStatus()->getValue() === OccurrenceStatus::IN_PROGRESS) {
+            // Ajustado para usar o tipo ou status real do banco
+            if ($occurrence->getType()->getValue() === 'INFRACAO') {
                 $openOccurrencesCount++;
-            }
-            elseif ($occurrence->getStatus()->getValue() === OccurrenceStatus::RESOLVED || $occurrence->getStatus()->getValue() === OccurrenceStatus::CLOSED) {
+            } else {
                 $resolvedOccurrencesCount++;
             }
         }
@@ -46,5 +46,23 @@ class DashboardService
             $openOccurrencesCount,
             $resolvedOccurrencesCount
             );
+    }
+
+    public function getChartData(): array
+    {
+        $now = new \DateTimeImmutable();
+        $year = (int)$now->format('Y');
+
+        return [
+            'status' => 'success',
+            'summary' => [
+                'today' => $this->occurrenceRepository->countDaily($now),
+                'week' => $this->occurrenceRepository->countWeekly($now),
+                'month' => $this->occurrenceRepository->countMonthly($now),
+                'total_students' => count($this->employeeRepository->findAll())
+            ],
+            'bar' => $this->occurrenceRepository->getMonthlyInfractionStats($year),
+            'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi()
+        ];
     }
 }

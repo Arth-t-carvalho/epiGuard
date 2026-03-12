@@ -2,32 +2,36 @@
 
 namespace epiGuard\Presentation\Controller\Api;
 
+use App\Application\Service\DashboardService;
+use App\Infrastructure\Persistence\MySQLOccurrenceRepository;
+use App\Infrastructure\Persistence\MySQLEmployeeRepository;
+use App\Infrastructure\Persistence\MySQLDepartmentRepository;
+use App\Infrastructure\Persistence\MySQLUserRepository;
+use App\Infrastructure\Persistence\MySQLEpiRepository;
+use App\Application\Validator\OccurrenceValidator;
+
 class ChartApiController
 {
+    private DashboardService $dashboardService;
+
+    public function __construct()
+    {
+        // Injeção de dependências manual para o contexto desse projeto PHP puro
+        $deptRepo = new MySQLDepartmentRepository();
+        $employeeRepo = new MySQLEmployeeRepository($deptRepo);
+        $userRepo = new MySQLUserRepository();
+        $epiRepo = new MySQLEpiRepository();
+        $occurrenceRepo = new MySQLOccurrenceRepository($employeeRepo, $userRepo, $epiRepo);
+        
+        $this->dashboardService = new DashboardService($employeeRepo, $occurrenceRepo);
+    }
+
     public function index()
     {
         header('Content-Type: application/json');
         
-        // Mock data to match the dashboard requirements
-        $response = [
-            'status' => 'success',
-            'summary' => [
-                'today' => 2,
-                'week' => 11,
-                'month' => 47,
-                'total_students' => 100
-            ],
-            'bar' => [
-                'capacete' => [15, 18, 22, 10, 28, 20, 24, 17, 30, 23, 19, 26],
-                'oculos' => [10, 12, 13, 8, 16, 14, 15, 11, 20, 14, 12, 17],
-                'total' => [25, 30, 35, 18, 44, 34, 39, 28, 50, 37, 31, 43]
-            ],
-            'doughnut' => [
-                'labels' => ['Capacete', 'Óculos', 'Total'],
-                'data' => [60, 40, 100]
-            ]
-        ];
+        $data = $this->dashboardService->getChartData();
 
-        echo json_encode($response);
+        echo json_encode($data);
     }
 }
