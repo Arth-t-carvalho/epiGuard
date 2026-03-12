@@ -348,7 +348,11 @@ body {
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    gap: 20px;
+}
+
+.chart-card {
+    margin: 24px 0;
 }
 
 /* ESTILO PADRÃO DOS CARDS */
@@ -412,7 +416,7 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     /* Calendar, Donut, List */
-    gap: 24px;
+    gap: 20px;
     min-height: 340px;
     margin-bottom: 25px;
 }
