@@ -1,6 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /epiGuard1.1/
+
+    # Ignorar arquivos e diretórios existentes
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [L,QSA]
+
+    # Redirecionar tudo para o index.php
+    RewriteRule ^ index.php [L]
 </IfModule>

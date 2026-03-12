@@ -12,13 +12,12 @@ class Connection
     public static function getInstance(): mysqli
     {
         if (self::$instance === null) {
-            // Em um ambiente real, carregaríamos do .env.
-            // Usando padrões comuns do XAMPP
-            $host = 'localhost';
-            $user = 'root';
-            $pass = '';
-            $port = '3308';
-            $db   = 'epi_guard';
+            // Tenta carregar do ambiente ou usa padrões do XAMPP
+            $host = getenv('DB_HOST') ?: 'localhost';
+            $user = getenv('DB_USER') ?: 'root';
+            $pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
+            $port = getenv('DB_PORT') ?: '3308'; // Porta padrão alterada para 3306
+            $db = getenv('DB_NAME') ?: 'epi_guard';
 
             self::$instance = new mysqli($host, $user, $pass, $db, $port);
 
