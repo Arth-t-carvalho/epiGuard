@@ -12,10 +12,12 @@ spl_autoload_register(function ($class) {
     $prefix = 'epiGuard\\';
     $base_dir = __DIR__ . '/src/';
     $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) return;
+    if (strncmp($prefix, $class, $len) !== 0)
+        return;
     $relative_class = substr($class, $len);
     $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-    if (file_exists($file)) require $file;
+    if (file_exists($file))
+        require $file;
 });
 
 // Autoloader para classes do Domínio e Aplicação (namespace App\)
@@ -23,20 +25,23 @@ spl_autoload_register(function ($class) {
     $prefix = 'App\\';
     $base_dir = __DIR__ . '/src/';
     $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) return;
+    if (strncmp($prefix, $class, $len) !== 0)
+        return;
     $relative_class = substr($class, $len);
     $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-    if (file_exists($file)) require $file;
+    if (file_exists($file))
+        require $file;
 });
 
-
+// sdsa
 session_start();
 
 // Carregar .env manualmente se existir na pasta config
 if (file_exists(__DIR__ . '/config/.env')) {
     $lines = file(__DIR__ . '/config/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        if (strpos(trim($line), '#') === 0) continue;
+        if (strpos(trim($line), '#') === 0)
+            continue;
         list($name, $value) = explode('=', $line, 2);
         putenv(trim($name) . "=" . trim($value));
     }
@@ -71,20 +76,23 @@ $path = str_replace('/index.php', '', $path);
 // Remove query strings
 $path = explode('?', $path)[0];
 
-if ($path === '' || $path === '/') $path = '/login';
+if ($path === '' || $path === '/')
+    $path = '/login';
 
 try {
     if (isset($routes[$path])) {
         [$controllerClass, $method] = $routes[$path];
         $controller = new $controllerClass();
         $controller->$method();
-    } else {
+    }
+    else {
         header("HTTP/1.0 404 Not Found");
         require_once __DIR__ . '/src/Presentation/View/auth/login.php'; // Fallback ou página 404
-        // echo "<h1>404 - Página não encontrada</h1>";
-        // echo "<p>Caminho requisitado: " . htmlspecialchars($path) . "</p>";
+    // echo "<h1>404 - Página não encontrada</h1>";
+    // echo "<p>Caminho requisitado: " . htmlspecialchars($path) . "</p>";
     }
-} catch (Exception $e) {
+}
+catch (Exception $e) {
     echo "<div style='background: #f8d7da; color: #721c24; padding: 20px; border: 1px solid #f5c6cb; border-radius: 5px; font-family: sans-serif; margin: 20px;'>";
     echo "<h3>Erro do Sistema</h3>";
     echo "<p>Mensagem: " . $e->getMessage() . "</p>";
