@@ -12,78 +12,137 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/auth.css">
 </head>
-<body class="register-page">
+<body class="login-page-v2">
 
-    <main class="login-container">
-        <div class="login-card">
-            <!-- Left Side: SENAI Branding -->
-            <div class="login-sidebar register-sidebar">
-                <div class="sidebar-header">
-                    <div class="epi-logo-circle"></div>
-                    <span class="epi-brand">EPI GUARD</span>
+    <div class="split-screen">
+        <!-- Lado Esquerdo: Institucional -->
+        <div class="left-side">
+            <div class="institutional-content">
+                <div class="facchini-branding">
+                    <h1 class="facchini-logo-text">FACCHINI</h1>
+                    <div class="facchini-divider">
+                        <span>DIVISÃO DE SEGURANÇA</span>
+                    </div>
                 </div>
-                
-                <div class="sidebar-main">
-                    <h2 class="senai-title">SENAI</h2>
-                    <p class="sidebar-text">Cadastro de Usuário</p>
+
+                <div class="image-showcase">
+                    <div class="image-frame">
+                        <img src="<?= BASE_PATH ?>/assets/images/login_industrial.png" alt="Produção Facchini">
+                        <div class="image-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="epi-guard-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>EPI GUARD</span>
+                </div>
+
+                <div class="motivational-text">
+                    <h2>O nosso maior patrimônio são as <span>pessoas.</span></h2>
+                    <p>Com prevenção, o futuro avança, pois a Segurança é o melhor implemento da nossa vida.</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Side: Form -->
-            <div class="login-form-area">
-                <div class="form-header">
-                    <h2>Cadastrar</h2>
-                    <p>Insira as suas credenciais administrativas.</p>
+        <!-- Lado Direito: Formulário de Registro -->
+        <div class="right-side">
+            <div class="login-box">
+                <div class="login-header">
+                    <h2>Cadastrar Conta</h2>
+                    <p>Preencha os campos abaixo para solicitar acesso administrativo.</p>
                 </div>
 
                 <?php if (isset($_SESSION['error'])): ?>
                     <div class="alert alert-danger" style="color: #e31e24; margin-bottom: 15px; font-weight: 600;">
+                        <i class="fa-solid fa-circle-exclamation"></i>
                         <?= $_SESSION['error']; unset($_SESSION['error']); ?>
                     </div>
                 <?php endif; ?>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success" style="color: #155724; background-color: #d4edda; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: 600;">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                    </div>
+                <?php endif; ?>
 
-                <form id="register-form" method="POST" action="<?= BASE_PATH ?>/register">
-                    <div class="input-group">
+                <form id="register-form" method="POST" action="<?= BASE_PATH ?>/register" class="facchini-form">
+                    
+                    <div class="input-field">
                         <label for="fullname">NOME COMPLETO</label>
-                        <input type="text" id="fullname" name="nome" placeholder="Ex: Arthur Silva" required>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" id="fullname" name="nome" placeholder="Ex: Arthur Silva" required>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="username">GMAIL OU CPF</label>
-                        <input type="text" id="username" name="usuario" placeholder="exemplo@gmail.com ou CPF" required>
+                    <div class="input-field">
+                        <label for="username">E-MAIL OU CPF</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="text" id="username" name="usuario" placeholder="exemplo@facchini.com.br" required>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="password">SENHA</label>
-                        <div class="password-wrapper">
+                    <div class="input-field">
+                        <div class="label-row">
+                            <label for="password">SENHA</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
                             <input type="password" id="password" name="senha" placeholder="••••••••" required>
-                            <button type="button" id="toggle-password" class="toggle-password">
+                            <button type="button" id="toggle-password" class="eye-btn">
                                 <i class="fa-regular fa-eye-slash"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="input-group">
+                    <div class="input-field">
                         <label for="cargo">CARGO</label>
-                        <select name="cargo" id="cargo" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #E9EDF7; background: #F4F7FE; font-weight: 600; color: #1B2559;">
-                            <option value="GERENTE_SEGURANCA">Gerente de Segurança</option>
-                            <option value="SUPERVISOR">Supervisor</option>
-                            <option value="SUPER_ADMIN">Super Admin</option>
-                        </select>
+                        <div class="input-wrapper" style="padding: 0;">
+                            <i class="fa-solid fa-briefcase" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #8F9BBA;"></i>
+                            <select name="cargo" id="cargo" style="width: 100%; padding: 14px 14px 14px 45px; border-radius: 50px; border: 2px solid #E9EDF7; background: #fff; font-weight: 500; color: #1B2559; outline: none; transition: border-color 0.3s ease; appearance: none; font-family: 'Montserrat', sans-serif;">
+                                <option value="GERENTE_SEGURANCA">Gerente de Segurança</option>
+                                <option value="SUPERVISOR">Supervisor</option>
+                                <option value="SUPER_ADMIN">Super Admin</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #8F9BBA; pointer-events: none;"></i>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-login btn-register">
+                    <button type="submit" class="btn-submit">
                         CRIAR CONTA <i class="fa-solid fa-chevron-right"></i>
                     </button>
 
-                    <div class="form-footer">
-                        <p>Já tem conta? <a href="<?= BASE_PATH ?>/login" class="link-register">Faça Login</a></p>
+                    <div class="form-bottom">
+                        <p>Já possui acesso cadastrado? <a href="<?= BASE_PATH ?>/login">Faça Login</a></p>
                     </div>
                 </form>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script src="<?= BASE_PATH ?>/assets/js/auth.js"></script>
+    <script>
+        // Lógica simples para o olhinho da senha copiando o comportamento do auth.js
+        const toggleBtn = document.getElementById('toggle-password');
+        const passInput = document.getElementById('password');
+        if(toggleBtn && passInput) {
+            toggleBtn.addEventListener('click', () => {
+                const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passInput.setAttribute('type', type);
+                
+                const icon = toggleBtn.querySelector('i');
+                if(type === 'text') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -53,8 +53,10 @@ class AuthController
             $mappedRole = UserRole::VIEWER;
             if ($cargo === 'SUPER_ADMIN') {
                 $mappedRole = UserRole::ADMIN;
-            } elseif ($cargo === 'SUPERVISOR' || $cargo === 'GERENTE_SEGURANCA') {
+            } elseif ($cargo === 'SUPERVISOR') {
                 $mappedRole = UserRole::OPERATOR;
+            } elseif ($cargo === 'GERENTE_SEGURANCA') {
+                $mappedRole = UserRole::MANAGER;
             }
 
             // Criptografar senha
@@ -74,7 +76,12 @@ class AuthController
             header("Location: " . BASE_PATH . "/login");
             exit;
         } catch (\Exception $e) {
-            $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
+            $msg = $e->getMessage();
+            if (strpos($msg, 'Duplicate entry') !== false) {
+                $_SESSION['error'] = "Este E-mail ou CPF já está cadastrado no sistema.";
+            } else {
+                $_SESSION['error'] = "Erro ao cadastrar: " . $msg;
+            }
             header("Location: " . BASE_PATH . "/register");
             exit;
         }

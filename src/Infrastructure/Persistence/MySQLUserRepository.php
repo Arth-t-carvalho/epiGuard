@@ -88,7 +88,7 @@ class MySQLUserRepository implements UserRepositoryInterface
             $dbRole = 'SUPER_ADMIN';
         } elseif ($roleVal === UserRole::OPERATOR) {
             $dbRole = 'SUPERVISOR';
-        } elseif ($roleVal === UserRole::VIEWER) {
+        } elseif ($roleVal === UserRole::MANAGER) {
             $dbRole = 'GERENTE_SEGURANCA';
         }
 
@@ -100,7 +100,7 @@ class MySQLUserRepository implements UserRepositoryInterface
             $user->setId($this->db->insert_id);
         } else {
             error_log("DB Error on save: " . $stmt->error);
-            throw new \Exception("Erro ao salvar usuário no banco de dados.");
+            throw new \Exception($stmt->error);
         }
     }
 
@@ -119,7 +119,7 @@ class MySQLUserRepository implements UserRepositoryInterface
             $dbRole = 'SUPER_ADMIN';
         } elseif ($roleVal === UserRole::OPERATOR) {
             $dbRole = 'SUPERVISOR';
-        } elseif ($roleVal === UserRole::VIEWER) {
+        } elseif ($roleVal === UserRole::MANAGER) {
             $dbRole = 'GERENTE_SEGURANCA';
         }
 
@@ -130,7 +130,7 @@ class MySQLUserRepository implements UserRepositoryInterface
         
         if (!$stmt->execute()) {
             error_log("DB Error on update: " . $stmt->error);
-            throw new \Exception("Erro ao atualizar usuário no banco de dados.");
+            throw new \Exception($stmt->error);
         }
     }
 
@@ -150,6 +150,8 @@ class MySQLUserRepository implements UserRepositoryInterface
             $role = new UserRole(UserRole::ADMIN);
         } elseif ($cargo === 'supervisor' || $cargo === 'operator') {
             $role = new UserRole(UserRole::OPERATOR);
+        } elseif ($cargo === 'gerente_seguranca') {
+            $role = new UserRole(UserRole::MANAGER);
         } else {
             $role = new UserRole(UserRole::VIEWER);
         }
