@@ -30,7 +30,8 @@ class ChartApiController
     {
         header('Content-Type: application/json');
         
-        $data = $this->dashboardService->getChartData();
+        $sectorId = isset($_GET['sector_id']) && $_GET['sector_id'] !== 'all' ? (int)$_GET['sector_id'] : null;
+        $data = $this->dashboardService->getChartData($sectorId);
 
         echo json_encode($data);
     }
