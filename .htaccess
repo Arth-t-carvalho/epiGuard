@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /epiGuard1.1/
+    RewriteBase /epiGuard-3jun/epiGuard-NAP/
 
     # Ignorar arquivos e diretórios existentes
     RewriteCond %{REQUEST_FILENAME} !-f

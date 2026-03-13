@@ -53,7 +53,13 @@ $uri = $_SERVER['REQUEST_URI'] ?? '/';
 // Detectar o basePath automaticamente
 $scriptName = $_SERVER['SCRIPT_NAME'];
 $basePath = str_replace('\\', '/', dirname($scriptName));
-if ($basePath === '/') {
+
+// Garantir que não tenha barra no final se o basePath não for apenas "/"
+if ($basePath !== '/' && substr($basePath, -1) === '/') {
+    $basePath = substr($basePath, 0, -1);
+}
+
+if ($basePath === '/' || $basePath === '.') {
     $basePath = '';
 }
 

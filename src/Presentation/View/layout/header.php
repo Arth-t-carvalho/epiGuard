@@ -18,7 +18,7 @@
         </button>
 
         <button class="btn-export">
-            <i class="fa-solid fa-download"></i> Exportar
+            <i data-lucide="download"></i> Exportar
         </button>
         
         <div class="user-profile-trigger">

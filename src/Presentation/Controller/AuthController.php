@@ -3,10 +3,10 @@
 namespace epiGuard\Presentation\Controller;
 
 use epiGuard\Infrastructure\Database\Connection;
-use App\Infrastructure\Persistence\MySQLUserRepository;
-use App\Domain\Entity\User;
-use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\UserRole;
+use epiGuard\Infrastructure\Persistence\MySQLUserRepository;
+use epiGuard\Domain\Entity\User;
+use epiGuard\Domain\ValueObject\Email;
+use epiGuard\Domain\ValueObject\UserRole;
 
 class AuthController
 {
@@ -57,6 +57,8 @@ class AuthController
                 $mappedRole = UserRole::OPERATOR;
             } elseif ($cargo === 'GERENTE_SEGURANCA') {
                 $mappedRole = UserRole::MANAGER;
+            } elseif ($cargo === 'OPERATOR') {
+                $mappedRole = UserRole::OPERATOR;
             }
 
             // Criptografar senha
@@ -128,5 +130,25 @@ class AuthController
             header("Location: " . BASE_PATH . "/login");
             exit;
         }
+    }
+
+    public function resetPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lógica de recuperação (mockup por enquanto)
+            $_SESSION['success'] = "Se o e-mail estiver cadastrado, você receberá as instruções.";
+            header("Location: " . BASE_PATH . "/login");
+            exit;
+        }
+        require_once __DIR__ . '/../View/auth/reset-password.php';
+    }
+    public function logout()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_destroy();
+        header("Location: " . BASE_PATH . "/login");
+        exit;
     }
 }

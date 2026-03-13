@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Domain\Entity\AuditLog;
-use App\Domain\Repository\AuditLogRepositoryInterface;
+use epiGuard\Domain\Entity\AuditLog;
+use epiGuard\Domain\Repository\AuditLogRepositoryInterface;
 
 class AuditService
 {

@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Repository;
+namespace epiGuard\Domain\Repository;
 
-use App\Domain\Entity\User;
-use App\Domain\ValueObject\Email;
+use epiGuard\Domain\Entity\User;
+use epiGuard\Domain\ValueObject\Email;
 
 interface UserRepositoryInterface
 {

@@ -6,7 +6,9 @@ $currentRoute = str_replace($basePath, '', $currentPath);
 ?>
 <aside class="sidebar">
     <div class="brand">
-        <div class="logo-circle"></div>
+        <div class="logo-circle">
+            <i data-lucide="shield-check"></i>
+        </div>
         EPI <span>GUARD</span>
     </div>
 
@@ -27,7 +29,7 @@ $currentRoute = str_replace($basePath, '', $currentPath);
             <i data-lucide="building-2"></i>
             <span>Gestão de Setor</span>
         </a>
-        <a href="<?= BASE_PATH ?>/management/departments" class="nav-item <?= (strpos($currentRoute, '/management') === 0) ? 'active' : '' ?>">
+        <a href="<?= BASE_PATH ?>/occurrences" class="nav-item <?= ($currentRoute === '/occurrences') ? 'active' : '' ?>">
             <i data-lucide="file-text"></i>
             <span>Ocorrências</span>
         </a>
@@ -73,6 +75,9 @@ $currentRoute = str_replace($basePath, '', $currentPath);
     function toggleAiChat() {
         const chatWindow = document.getElementById('aiChatWindow');
         chatWindow.classList.toggle('open');
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
     }
 
     function toggleExpandAiChat() {

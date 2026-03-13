@@ -2,9 +2,9 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Repository;
+namespace epiGuard\Domain\Repository;
 
-use App\Domain\Entity\AuditLog;
+use epiGuard\Domain\Entity\AuditLog;
 
 interface AuditLogRepositoryInterface
 {

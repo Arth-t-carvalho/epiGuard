@@ -2,7 +2,7 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\DTO\Response;
+namespace epiGuard\Application\DTO\Response;
 
 class OccurrenceDetail
 {

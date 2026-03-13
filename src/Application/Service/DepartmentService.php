@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Domain\Entity\Department;
-use App\Domain\Repository\DepartmentRepositoryInterface;
+use epiGuard\Domain\Entity\Department;
+use epiGuard\Domain\Repository\DepartmentRepositoryInterface;
 
 class DepartmentService
 {

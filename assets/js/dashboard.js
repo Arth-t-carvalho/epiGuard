@@ -156,6 +156,9 @@ function selectSectorRecord(id, name) {
 
     closeCourseModal();
 
+
+    closeCourseModal();
+
     // Recarrega todos os dados com o novo filtro
     loadCalendarData();
     loadCharts();
@@ -604,59 +607,70 @@ function loadCharts() {
                             }
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: 10,
-                            ticks: { stepSize: 1 },
-                            grid: { display: true, color: 'rgba(0,0,0,0.05)' }
-                        },
-                        x: { grid: { display: false } }
+                }
+            },
+                plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
                     }
                 }
-            });
-
-            const isDoughnutEmpty = response.doughnut.total === 0;
-            const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
-            const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
-
-            const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-            doughnutChartInstance = new Chart(ctxDoughnut, {
-                type: 'doughnut',
-                data: {
-                    labels: isDoughnutEmpty ? ['Sem Infrações'] : response.doughnut.labels,
-                    datasets: [{
-                        data: isDoughnutEmpty ? [1] : response.doughnut.data,
-                        backgroundColor: doughnutBgColor,
-                        hoverBackgroundColor: doughnutHoverColor,
-                        borderWidth: 2
-                    }]
+            },
+                scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10,
+                    ticks: { stepSize: 1 },
+                    grid: { display: true, color: 'rgba(0,0,0,0.05)' }
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '75%',
-                    onClick: (evt, active, chart) => {
-                        if (active.length > 0) {
-                            const index = active[0].index;
-                            const label = chart.data.labels[index];
-                            openDetailModal(selectedDate.getMonth(), monthsFull[selectedDate.getMonth()], label);
-                        }
-                    }
+                x: { grid: { display: false } }
+            }
                 }
             });
 
-            // Atualiza TOP OCORRÊNCIAS baseado no Doughnut Chart
-            const topList = document.getElementById('topInfractions');
-            if (topList) {
-                topList.innerHTML = '';
-                if (response.doughnut && response.doughnut.total > 0) {
-                    const dataLabels = response.doughnut.labels;
-                    const dataValues = response.doughnut.data;
-                    const max = Math.max(...dataValues);
+const isDoughnutEmpty = response.doughnut.total === 0;
+const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
+const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#f59e0b', '#3b82f6'];
+const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
 
-                    dataLabels.forEach((label, i) => {
-                        if (dataValues[i] > 0) {
-                            const pct = Math.round((dataValues[i] / max) * 100);
-                            topList.innerHTML += `
+const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+doughnutChartInstance = new Chart(ctxDoughnut, {
+    type: 'doughnut',
+    data: {
+        labels: isDoughnutEmpty ? ['Sem Infrações'] : response.doughnut.labels,
+        datasets: [{
+            data: isDoughnutEmpty ? [1] : response.doughnut.data,
+            backgroundColor: doughnutBgColor,
+            hoverBackgroundColor: doughnutHoverColor,
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false, cutout: '75%',
+        onClick: (evt, active, chart) => {
+            if (active.length > 0) {
+                const index = active[0].index;
+                const label = chart.data.labels[index];
+                openDetailModal(selectedDate.getMonth(), monthsFull[selectedDate.getMonth()], label);
+            }
+        }
+    }
+});
+
+// Atualiza TOP OCORRÊNCIAS baseado no Doughnut Chart
+const topList = document.getElementById('topInfractions');
+if (topList) {
+    topList.innerHTML = '';
+    if (response.doughnut && response.doughnut.total > 0) {
+        const dataLabels = response.doughnut.labels;
+        const dataValues = response.doughnut.data;
+        const max = Math.max(...dataValues);
+
+        dataLabels.forEach((label, i) => {
+            if (dataValues[i] > 0) {
+                const pct = Math.round((dataValues[i] / max) * 100);
+                topList.innerHTML += `
                                 <div class="list-item">
                                     <span class="occ-name">${label}</span>
                                     <div class="progress-bar">
@@ -664,15 +678,15 @@ function loadCharts() {
                                     </div>
                                 </div>
                             `;
-                        }
-                    });
-                }
             }
+        });
+    }
+}
 
         })
-        .catch(err => {
-            console.error('Erro gráficos:', err);
-        });
+        .catch (err => {
+    console.error('Erro gráficos:', err);
+});
 }
 
 function selectMonth(index) {

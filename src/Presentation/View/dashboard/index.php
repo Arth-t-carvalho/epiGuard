@@ -70,11 +70,20 @@
                 <div class="chart-card card">
                     <div class="chart-header-actions">
                         <h3 class="chart-title">Visão Geral Mensal</h3>
-                        <!-- BOTÃO DE FILTRO PREMIUM NO CARD -->
-                        <button class="btn-premium-filter" onclick="openCourseModal()">
-                            <i data-lucide="layers"></i>
-                            <span>Filtrar por Setor</span>
-                        </button>
+                        
+                        <!-- NOVO GATILHO DE FILTRO -->
+                        <div class="minimal-filter-trigger" onclick="openCourseModal()" style="cursor: pointer; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.03); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                            <div class="filter-icon" style="color: var(--primary);">
+                                <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
+                            </div>
+                            <div class="filter-info" style="display: flex; flex-direction: column;">
+                                <span class="filter-label" style="font-size: 10px; text-transform: uppercase; color: #64748B; font-weight: 700;">Setor Ativo</span>
+                                <span id="currentSectorLabel" class="filter-value" style="font-size: 13px; font-weight: 600; color: var(--navy);">Empresa Inteira</span>
+                            </div>
+                            <div class="filter-arrow" style="color: #64748B; margin-left: 10px;">
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="chart-container" style="height: 300px;">
                         <canvas id="mainChart"></canvas>

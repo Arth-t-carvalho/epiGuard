@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence;
+namespace epiGuard\Infrastructure\Persistence;
 
-use App\Domain\Entity\Occurrence;
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\Repository\EpiRepositoryInterface;
-use App\Domain\ValueObject\OccurrenceStatus;
-use App\Domain\ValueObject\OccurrenceType;
+use epiGuard\Domain\Entity\Occurrence;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\Repository\UserRepositoryInterface;
+use epiGuard\Domain\Repository\EpiRepositoryInterface;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Domain\ValueObject\OccurrenceType;
 use epiGuard\Infrastructure\Database\Connection;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -199,6 +199,28 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
             }
         }
 
+        $queryTotal = "
+            SELECT MONTH(o.data_hora) as mes, COUNT(*) as qtd
+            FROM ocorrencias o
+            JOIN funcionarios f ON o.funcionario_id = f.id
+            WHERE YEAR(o.data_hora) = ? AND o.tipo = 'INFRACAO'
+        ";
+        if ($sectorId) $queryTotal .= " AND f.setor_id = ?";
+        $queryTotal .= " GROUP BY mes";
+        
+        $stmtTotal = $this->db->prepare($queryTotal);
+        if ($sectorId) $stmtTotal->bind_param('ii', $year, $sectorId);
+        else $stmtTotal->bind_param('i', $year);
+        $stmtTotal->execute();
+        $resTotal = $stmtTotal->get_result();
+        
+        while ($row = $resTotal->fetch_assoc()) {
+            $mesIdx = (int) $row['mes'] - 1;
+            if ($mesIdx >= 0 && $mesIdx < 12) {
+                $stats['total'][$mesIdx] = (int) $row['qtd'];
+            }
+        }
+
         return $stats;
     }
 
@@ -277,6 +299,61 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
         $id = $occurrence->getId();
         $stmt->bind_param('i', $id);
         $stmt->execute();
+    }
+
+    public function findInfractions(array $filters = []): array
+    {
+        $sql = "SELECT o.id, o.data_hora, o.tipo, f.nome as funcionario_nome, f.foto_referencia, s.sigla as setor_sigla, e.nome as epi_nome, o.criado_em, v.caminho_imagem as evidencia
+                FROM ocorrencias o
+                JOIN funcionarios f ON o.funcionario_id = f.id
+                LEFT JOIN setores s ON f.setor_id = s.id
+                LEFT JOIN ocorrencia_epis oe ON o.id = oe.ocorrencia_id
+                LEFT JOIN epis e ON oe.epi_id = e.id
+                LEFT JOIN evidencias v ON o.id = v.ocorrencia_id
+                WHERE o.tipo = 'INFRACAO'";
+
+        $params = [];
+        $types = "";
+
+        if (!empty($filters['search'])) {
+            $sql .= " AND (f.nome LIKE ? OR s.sigla LIKE ?)";
+            $searchTerm = "%" . $filters['search'] . "%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= "ss";
+        }
+
+        if (!empty($filters['epi']) && $filters['epi'] !== 'todos') {
+            $sql .= " AND e.nome LIKE ?";
+            $params[] = "%" . $filters['epi'] . "%";
+            $types .= "s";
+        }
+
+        if (!empty($filters['periodo']) && $filters['periodo'] !== 'todos') {
+            if ($filters['periodo'] === 'hoje') {
+                $sql .= " AND DATE(o.data_hora) = CURDATE()";
+            } elseif ($filters['periodo'] === 'semana') {
+                $sql .= " AND YEARWEEK(o.data_hora, 1) = YEARWEEK(CURDATE(), 1)";
+            } elseif ($filters['periodo'] === 'mes') {
+                $sql .= " AND MONTH(o.data_hora) = MONTH(CURDATE()) AND YEAR(o.data_hora) = YEAR(CURDATE())";
+            }
+        }
+
+        $sql .= " ORDER BY o.data_hora DESC";
+
+        $stmt = $this->db->prepare($sql);
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        return $data;
     }
 
     private function hydrate(array $row): Occurrence

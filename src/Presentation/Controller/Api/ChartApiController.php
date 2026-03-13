@@ -2,13 +2,13 @@
 
 namespace epiGuard\Presentation\Controller\Api;
 
-use App\Application\Service\DashboardService;
-use App\Infrastructure\Persistence\MySQLOccurrenceRepository;
-use App\Infrastructure\Persistence\MySQLEmployeeRepository;
-use App\Infrastructure\Persistence\MySQLDepartmentRepository;
-use App\Infrastructure\Persistence\MySQLUserRepository;
-use App\Infrastructure\Persistence\MySQLEpiRepository;
-use App\Application\Validator\OccurrenceValidator;
+use epiGuard\Application\Service\DashboardService;
+use epiGuard\Infrastructure\Persistence\MySQLOccurrenceRepository;
+use epiGuard\Infrastructure\Persistence\MySQLEmployeeRepository;
+use epiGuard\Infrastructure\Persistence\MySQLDepartmentRepository;
+use epiGuard\Infrastructure\Persistence\MySQLUserRepository;
+use epiGuard\Infrastructure\Persistence\MySQLEpiRepository;
+use epiGuard\Application\Validator\OccurrenceValidator;
 
 class ChartApiController
 {

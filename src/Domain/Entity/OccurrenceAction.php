@@ -2,9 +2,9 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Entity;
+namespace epiGuard\Domain\Entity;
 
-use App\Domain\ValueObject\ActionType;
+use epiGuard\Domain\ValueObject\ActionType;
 use DateTimeImmutable;
 
 class OccurrenceAction

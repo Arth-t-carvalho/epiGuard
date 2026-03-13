@@ -2,12 +2,12 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Application\DTO\Response\DashboardSummary;
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Application\DTO\Response\DashboardSummary;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
 
 class DashboardService
 {

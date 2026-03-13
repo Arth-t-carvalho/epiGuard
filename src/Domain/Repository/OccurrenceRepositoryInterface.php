@@ -2,9 +2,9 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Repository;
+namespace epiGuard\Domain\Repository;
 
-use App\Domain\Entity\Occurrence;
+use epiGuard\Domain\Entity\Occurrence;
 
 interface OccurrenceRepositoryInterface
 {
@@ -43,6 +43,8 @@ interface OccurrenceRepositoryInterface
      * Retorna array com distribuição por EPI para o gráfico de rosca
      */
     public function getInfractionDistributionByEpi(): array;
+
+    public function findInfractions(array $filters = []): array;
 
     public function save(Occurrence $occurrence): void;
 
