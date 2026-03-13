@@ -2,16 +2,16 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Application\DTO\Request\CreateEmployeeRequest;
-use App\Application\Validator\EmployeeValidator;
-use App\Domain\Entity\Employee;
-use App\Domain\Exception\DomainException;
-use App\Domain\Repository\DepartmentRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\ValueObject\CPF;
-use App\Domain\ValueObject\Email;
+use epiGuard\Application\DTO\Request\CreateEmployeeRequest;
+use epiGuard\Application\Validator\EmployeeValidator;
+use epiGuard\Domain\Entity\Employee;
+use epiGuard\Domain\Exception\DomainException;
+use epiGuard\Domain\Repository\DepartmentRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\ValueObject\CPF;
+use epiGuard\Domain\ValueObject\Email;
 
 class EmployeeService
 {

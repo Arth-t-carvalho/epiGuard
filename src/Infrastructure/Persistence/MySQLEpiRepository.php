@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence;
+namespace epiGuard\Infrastructure\Persistence;
 
-use App\Domain\Entity\EpiItem;
-use App\Domain\Repository\EpiRepositoryInterface;
+use epiGuard\Domain\Entity\EpiItem;
+use epiGuard\Domain\Repository\EpiRepositoryInterface;
 use epiGuard\Infrastructure\Database\Connection;
 use DateTimeImmutable;
 

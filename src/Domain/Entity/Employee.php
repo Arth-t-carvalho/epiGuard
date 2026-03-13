@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Entity;
+namespace epiGuard\Domain\Entity;
 
-use App\Domain\ValueObject\CPF;
-use App\Domain\ValueObject\Email;
+use epiGuard\Domain\ValueObject\CPF;
+use epiGuard\Domain\ValueObject\Email;
 use DateTimeImmutable;
 
 class Employee

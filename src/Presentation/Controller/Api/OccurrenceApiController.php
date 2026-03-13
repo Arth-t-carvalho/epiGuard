@@ -2,11 +2,11 @@
 
 namespace epiGuard\Presentation\Controller\Api;
 
-use App\Infrastructure\Persistence\MySQLOccurrenceRepository;
-use App\Infrastructure\Persistence\MySQLEmployeeRepository;
-use App\Infrastructure\Persistence\MySQLDepartmentRepository;
-use App\Infrastructure\Persistence\MySQLUserRepository;
-use App\Infrastructure\Persistence\MySQLEpiRepository;
+use epiGuard\Infrastructure\Persistence\MySQLOccurrenceRepository;
+use epiGuard\Infrastructure\Persistence\MySQLEmployeeRepository;
+use epiGuard\Infrastructure\Persistence\MySQLDepartmentRepository;
+use epiGuard\Infrastructure\Persistence\MySQLUserRepository;
+use epiGuard\Infrastructure\Persistence\MySQLEpiRepository;
 use epiGuard\Infrastructure\Database\Connection;
 
 class OccurrenceApiController

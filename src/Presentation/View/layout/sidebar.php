@@ -27,7 +27,7 @@ $currentRoute = str_replace($basePath, '', $currentPath);
             <i data-lucide="building-2"></i>
             <span>Gestão de Setor</span>
         </a>
-        <a href="<?= BASE_PATH ?>/management/departments" class="nav-item <?= (strpos($currentRoute, '/management') === 0) ? 'active' : '' ?>">
+        <a href="<?= BASE_PATH ?>/occurrences" class="nav-item <?= ($currentRoute === '/occurrences') ? 'active' : '' ?>">
             <i data-lucide="file-text"></i>
             <span>Ocorrências</span>
         </a>

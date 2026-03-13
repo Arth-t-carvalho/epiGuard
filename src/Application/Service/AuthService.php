@@ -2,13 +2,13 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Application\DTO\Request\LoginRequest;
-use App\Domain\Entity\User;
-use App\Domain\Exception\AuthenticationException;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\ValueObject\Email;
+use epiGuard\Application\DTO\Request\LoginRequest;
+use epiGuard\Domain\Entity\User;
+use epiGuard\Domain\Exception\AuthenticationException;
+use epiGuard\Domain\Repository\UserRepositoryInterface;
+use epiGuard\Domain\ValueObject\Email;
 
 class AuthService
 {

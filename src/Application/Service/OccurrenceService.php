@@ -2,23 +2,23 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Application\DTO\Request\CreateOccurrenceRequest;
-use App\Application\DTO\Request\ResolveOccurrenceRequest;
-use App\Application\Validator\OccurrenceValidator;
-use App\Domain\Entity\Occurrence;
-use App\Domain\Entity\OccurrenceAction;
-use App\Domain\Exception\DomainException;
-use App\Domain\Exception\InvalidOccurrenceException;
-use App\Domain\Exception\EmployeeNotFoundException;
-use App\Domain\Repository\EpiRepositoryInterface;
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\ValueObject\ActionType;
-use App\Domain\ValueObject\OccurrenceStatus;
-use App\Domain\ValueObject\OccurrenceType;
+use epiGuard\Application\DTO\Request\CreateOccurrenceRequest;
+use epiGuard\Application\DTO\Request\ResolveOccurrenceRequest;
+use epiGuard\Application\Validator\OccurrenceValidator;
+use epiGuard\Domain\Entity\Occurrence;
+use epiGuard\Domain\Entity\OccurrenceAction;
+use epiGuard\Domain\Exception\DomainException;
+use epiGuard\Domain\Exception\InvalidOccurrenceException;
+use epiGuard\Domain\Exception\EmployeeNotFoundException;
+use epiGuard\Domain\Repository\EpiRepositoryInterface;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\Repository\UserRepositoryInterface;
+use epiGuard\Domain\ValueObject\ActionType;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Domain\ValueObject\OccurrenceType;
 use DateTimeImmutable;
 
 class OccurrenceService

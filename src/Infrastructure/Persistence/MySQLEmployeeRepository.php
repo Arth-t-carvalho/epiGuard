@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence;
+namespace epiGuard\Infrastructure\Persistence;
 
-use App\Domain\Entity\Employee;
-use App\Domain\ValueObject\CPF;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\Repository\DepartmentRepositoryInterface;
+use epiGuard\Domain\Entity\Employee;
+use epiGuard\Domain\ValueObject\CPF;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\Repository\DepartmentRepositoryInterface;
 use epiGuard\Infrastructure\Database\Connection;
 use DateTimeImmutable;
 
@@ -37,14 +37,12 @@ class MySQLEmployeeRepository implements EmployeeRepositoryInterface
 
     public function findByCpf(CPF $cpf): ?Employee
     {
-        // Como o campo CPF não existe no schema.sql fornecido, mas está na entidade, 
-        // usaremos o ID ou um campo similar se necessário. Mantendo compatibilidade com a Interface.
         return null;
     }
 
     public function findByEnrollmentNumber(string $enrollmentNumber): ?Employee
     {
-        return null; // Campo não presente no schema.sql
+        return null;
     }
 
     /** @return Employee[] */
@@ -110,7 +108,7 @@ class MySQLEmployeeRepository implements EmployeeRepositoryInterface
         
         return new Employee(
             name: $row['nome'],
-            cpf: new CPF('12345678909'), // Placeholder válido (matematicamente) pois o campo não existe na tabela
+            cpf: new CPF('12345678909'),
             enrollmentNumber: (string) $row['id'],
             department: $department,
             id: (int) $row['id'],
