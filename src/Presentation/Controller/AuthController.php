@@ -3,10 +3,10 @@
 namespace epiGuard\Presentation\Controller;
 
 use epiGuard\Infrastructure\Database\Connection;
-use App\Infrastructure\Persistence\MySQLUserRepository;
-use App\Domain\Entity\User;
-use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\UserRole;
+use epiGuard\Infrastructure\Persistence\MySQLUserRepository;
+use epiGuard\Domain\Entity\User;
+use epiGuard\Domain\ValueObject\Email;
+use epiGuard\Domain\ValueObject\UserRole;
 
 class AuthController
 {

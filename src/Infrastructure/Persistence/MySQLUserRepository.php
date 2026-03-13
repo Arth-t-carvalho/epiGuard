@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence;
+namespace epiGuard\Infrastructure\Persistence;
 
-use App\Domain\Entity\User;
-use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\UserRole;
-use App\Domain\Repository\UserRepositoryInterface;
+use epiGuard\Domain\Entity\User;
+use epiGuard\Domain\ValueObject\Email;
+use epiGuard\Domain\ValueObject\UserRole;
+use epiGuard\Domain\Repository\UserRepositoryInterface;
 use epiGuard\Infrastructure\Database\Connection;
 use DateTimeImmutable;
 

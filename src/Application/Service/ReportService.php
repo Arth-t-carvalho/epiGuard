@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
 
 class ReportService
 {

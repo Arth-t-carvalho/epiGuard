@@ -68,7 +68,7 @@
                                 <i class="fa-solid fa-users"></i>
                             </div>
                             <div class="summary-info">
-                                <span class="summary-label">Alunos Afetados</span>
+                                <span class="summary-label">Funcionários Afetados</span>
                                 <span class="summary-value" id="totalAlunos">23</span>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
 
                     <!-- Filters -->
                     <div class="filter-bar">
-                        <input type="text" id="searchInput" placeholder="🔍 Buscar aluno ou curso...">
+                        <input type="text" id="searchInput" placeholder="🔍 Buscar funcionário ou setor...">
                         <select id="filterPeriodo">
                             <option value="todos">Todos os períodos</option>
                             <option value="hoje">Hoje</option>
@@ -109,26 +109,27 @@
                             <thead>
                                 <tr>
                                     <th>Data</th>
-                                    <th>Aluno</th>
-                                    <th>Curso</th>
+                                    <th>Funcionário</th>
+                                    <th>Setor</th>
                                     <th>EPI</th>
                                     <th>Horário</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="infractionsTableBody">
                                 <tr>
                                     <td>11/03/2026</td>
                                     <td style="font-weight: 600;">João Silva</td>
                                     <td>TDS</td>
-                                    <td>Capacete</td>
+                                    <td data-epi="capacete">Capacete</td>
                                     <td>10:30</td>
-                                    <td><span class="status-dot pending"></span> Pendente</td>
+                                    <td data-status="pendente"><span class="status-dot pending"></span> Pendente</td>
                                     <td>
                                         <div class="table-actions">
                                             <button class="btn-action" title="Ver detalhes"><i class="fa-solid fa-eye"></i></button>
                                             <button class="btn-action" title="Resolver"><i class="fa-solid fa-check"></i></button>
+                                            <button class="btn-action danger" title="Excluir" onclick="deleteInfraction(this)"><i class="fa-solid fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -136,9 +137,9 @@
                                     <td>11/03/2026</td>
                                     <td style="font-weight: 600;">Maria Souza</td>
                                     <td>TDS</td>
-                                    <td>Óculos</td>
+                                    <td data-epi="oculos">Óculos</td>
                                     <td>09:15</td>
-                                    <td><span class="status-dot resolved"></span> Resolvido</td>
+                                    <td data-status="resolvido"><span class="status-dot resolved"></span> Resolvido</td>
                                     <td>
                                         <div class="table-actions">
                                             <button class="btn-action" title="Ver detalhes"><i class="fa-solid fa-eye"></i></button>
@@ -149,9 +150,9 @@
                                     <td>10/03/2026</td>
                                     <td style="font-weight: 600;">Pedro Santos</td>
                                     <td>TDS</td>
-                                    <td>Capacete</td>
+                                    <td data-epi="capacete">Capacete</td>
                                     <td>14:00</td>
-                                    <td><span class="status-dot pending"></span> Pendente</td>
+                                    <td data-status="pendente"><span class="status-dot pending"></span> Pendente</td>
                                     <td>
                                         <div class="table-actions">
                                             <button class="btn-action" title="Ver detalhes"><i class="fa-solid fa-eye"></i></button>
@@ -163,9 +164,9 @@
                                     <td>10/03/2026</td>
                                     <td style="font-weight: 600;">Ana Oliveira</td>
                                     <td>ELE</td>
-                                    <td>Óculos</td>
+                                    <td data-epi="oculos">Óculos</td>
                                     <td>11:45</td>
-                                    <td><span class="status-dot resolved"></span> Resolvido</td>
+                                    <td data-status="resolvido"><span class="status-dot resolved"></span> Resolvido</td>
                                     <td>
                                         <div class="table-actions">
                                             <button class="btn-action" title="Ver detalhes"><i class="fa-solid fa-eye"></i></button>
@@ -176,12 +177,13 @@
                                     <td>09/03/2026</td>
                                     <td style="font-weight: 600;">Carlos Lima</td>
                                     <td>MEC</td>
-                                    <td>Capacete</td>
+                                    <td data-epi="capacete">Capacete</td>
                                     <td>08:20</td>
-                                    <td><span class="status-dot resolved"></span> Resolvido</td>
+                                    <td data-status="resolvido"><span class="status-dot resolved"></span> Resolvido</td>
                                     <td>
                                         <div class="table-actions">
                                             <button class="btn-action" title="Ver detalhes"><i class="fa-solid fa-eye"></i></button>
+                                            <button class="btn-action danger" title="Excluir" onclick="deleteInfraction(this)"><i class="fa-solid fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -195,12 +197,48 @@
 
     <script>
         function applyFilters() {
-            // Placeholder for filter logic
-            const search = document.getElementById('searchInput').value;
-            const periodo = document.getElementById('filterPeriodo').value;
-            const status = document.getElementById('filterStatus').value;
-            const epi = document.getElementById('filterEpi').value;
-            console.log('Filtros:', { search, periodo, status, epi });
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const filterStatus = document.getElementById('filterStatus').value;
+            const filterEpi = document.getElementById('filterEpi').value;
+            
+            const tableBody = document.getElementById('infractionsTableBody');
+            const rows = tableBody.getElementsByTagName('tr');
+            let visibleCount = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
+                
+                const funcionario = cells[1].textContent.toLowerCase();
+                const setor = cells[2].textContent.toLowerCase();
+                const epi = cells[3].getAttribute('data-epi');
+                const status = cells[5].getAttribute('data-status');
+
+                const matchesSearch = funcionario.includes(searchText) || setor.includes(searchText);
+                const matchesStatus = filterStatus === 'todos' || status === filterStatus;
+                const matchesEpi = filterEpi === 'todos' || epi === filterEpi;
+
+                if (matchesSearch && matchesStatus && matchesEpi) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+
+            document.getElementById('tableCount').textContent = `Mostrando ${visibleCount} registros`;
+        }
+
+        function deleteInfraction(btn) {
+            if (confirm('Deseja realmente excluir este registro de infração?')) {
+                const row = btn.closest('tr');
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    row.remove();
+                    applyFilters(); // Atualiza o contador
+                }, 300);
+            }
         }
     </script>
     <script>lucide.createIcons();</script>

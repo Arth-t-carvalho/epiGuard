@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence;
+namespace epiGuard\Infrastructure\Persistence;
 
-use App\Domain\Entity\Occurrence;
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\Repository\EpiRepositoryInterface;
-use App\Domain\ValueObject\OccurrenceStatus;
-use App\Domain\ValueObject\OccurrenceType;
+use epiGuard\Domain\Entity\Occurrence;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\Repository\UserRepositoryInterface;
+use epiGuard\Domain\Repository\EpiRepositoryInterface;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Domain\ValueObject\OccurrenceType;
 use epiGuard\Infrastructure\Database\Connection;
 use DateTimeImmutable;
 use DateTimeInterface;

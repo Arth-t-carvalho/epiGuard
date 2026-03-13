@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Repository;
+namespace epiGuard\Domain\Repository;
 
-use App\Domain\Entity\Employee;
-use App\Domain\ValueObject\CPF;
+use epiGuard\Domain\Entity\Employee;
+use epiGuard\Domain\ValueObject\CPF;
 
 interface EmployeeRepositoryInterface
 {
