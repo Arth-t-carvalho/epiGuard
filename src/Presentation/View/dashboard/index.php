@@ -68,8 +68,13 @@
 
                 <!-- MAIN CHART -->
                 <div class="chart-card card">
-                    <div class="chart-header">
-                        <h3>Visão Geral Trimestral</h3>
+                    <div class="chart-header-actions">
+                        <h3 class="chart-title">Visão Geral Mensal</h3>
+                        <!-- BOTÃO DE FILTRO PREMIUM NO CARD -->
+                        <button class="btn-premium-filter" onclick="openCourseModal()">
+                            <i data-lucide="layers"></i>
+                            <span>Filtrar por Setor</span>
+                        </button>
                     </div>
                     <div class="chart-container" style="height: 300px;">
                         <canvas id="mainChart"></canvas>
@@ -181,6 +186,58 @@
                 <table class="custom-table">
                     <thead><tr></tr></thead>
                     <tbody id="modalTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE SELEÇÃO MINIMALISTA -->
+    <div id="courseModal" class="modal-premium">
+        <div class="modal-premium-content">
+            <div class="modal-premium-header">
+                <div>
+                    <h2>Selecione o Setor</h2>
+                    <p>Filtre os dados do dashboard por área específica</p>
+                </div>
+                <button class="close-premium" onclick="closeCourseModal()">&times;</button>
+            </div>
+            <div class="modal-premium-body">
+                <table class="minimal-table">
+                    <thead>
+                        <tr>
+                            <th>Setor / Curso</th>
+                            <th>Status Ativo</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="course-row global-row" onclick="selectSectorRecord('all', 'Empresa Inteira')">
+                            <td>
+                                <div class="sector-cell">
+                                    <div class="sector-dot global"></div>
+                                    <span>Toda a Empresa</span>
+                                </div>
+                            </td>
+                            <td><span class="status-tag">Visão Global</span></td>
+                            <td><i data-lucide="arrow-right"></i></td>
+                        </tr>
+                        <?php 
+                            $deptRepo = new \App\Infrastructure\Persistence\MySQLDepartmentRepository();
+                            $sectors = $deptRepo->findAll();
+                            foreach ($sectors as $sector): 
+                        ?>
+                            <tr class="course-row" onclick="selectSectorRecord('<?= $sector->getId() ?>', '<?= htmlspecialchars($sector->getName()) ?>')">
+                                <td>
+                                    <div class="sector-cell">
+                                        <div class="sector-dot"></div>
+                                        <span><?= htmlspecialchars($sector->getName()) ?></span>
+                                    </div>
+                                </td>
+                                <td><span class="status-tag active">Monitorado</span></td>
+                                <td><i data-lucide="chevron-right"></i></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </div>
         </div>

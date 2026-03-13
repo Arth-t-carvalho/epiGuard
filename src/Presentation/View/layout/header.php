@@ -5,7 +5,18 @@
     </div>
 
     <div class="header-actions">
-        <!-- Ícones extras se desejar, mas seguindo o novo CSS: -->
+
+        <!-- Notificações -->
+        <button class="header-icon-btn notification-btn">
+            <i data-lucide="bell"></i>
+            <span class="notification-badge">3</span>
+        </button>
+
+        <!-- Configurações -->
+        <button class="header-icon-btn">
+            <i data-lucide="settings"></i>
+        </button>
+
         <button class="btn-export">
             <i class="fa-solid fa-download"></i> Exportar
         </button>

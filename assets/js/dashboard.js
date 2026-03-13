@@ -9,7 +9,8 @@ let currCalMonth = new Date().getMonth();   // Mês visualizado no Modal de Esco
 let allOccurrences = []; // Dados do BD
 let mainChartInstance = null;
 let doughnutChartInstance = null;
-let selectedCourseId = 'all'; // Novo: Filtro de curso para Super Admin
+let selectedCourseId = 'all'; // Legado, mantido para compatibilidade de funções
+let selectedSectorId = 'all'; // Novo: Filtro de setor para visão empresarial
 
 // Arrays auxiliares
 const monthsFull = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -64,7 +65,7 @@ function loadCalendarData() {
     const month = selectedDate.getMonth() + 1;
     const year = selectedDate.getFullYear();
 
-    fetch(`${window.BASE_PATH}/api/calendar?month=${month}&year=${year}&course_id=${selectedCourseId}`)
+    fetch(`${window.BASE_PATH}/api/calendar?month=${month}&year=${year}&sector_id=${selectedSectorId}`)
         .then(res => res.json())
         .then(data => {
             allOccurrences = Array.isArray(data) ? data : [];
@@ -98,50 +99,32 @@ function renderInterface() {
         });
 
         if (dailyData.length > 0) {
-            const isSuperAdmin = (window.userRole === 'super_admin');
+            // Modo Empresarial: Todos vêem o agrupamento por SETOR
+            const grouped = {};
+            dailyData.forEach(item => {
+                const key = item.name || 'Desconhecido';
+                if (!grouped[key]) grouped[key] = { count: 0, items: [] };
+                grouped[key].count++;
+                grouped[key].items.push(item);
+            });
 
-            if (isSuperAdmin) {
-                const grouped = {};
-                dailyData.forEach(item => {
-                    const key = item.name || 'Desconhecido';
-                    if (!grouped[key]) grouped[key] = { count: 0, items: [] };
-                    grouped[key].count++;
-                    grouped[key].items.push(item);
-                });
+            Object.keys(grouped).forEach(name => {
+                const data = grouped[name];
+                const initials = name.substring(0, 2).toUpperCase();
 
-                Object.keys(grouped).forEach(name => {
-                    const data = grouped[name];
-                    const initials = name.substring(0, 2).toUpperCase();
-                    const isGlobal = (selectedCourseId === 'all');
-                    const clickAction = isGlobal ? `onclick="applyCourseFilterByName('${name.replace(/'/g, "\\'")}')" style="cursor:pointer;" title="Clique para filtrar este curso"` : '';
-
-                    list.innerHTML += `
-                        <div class="occurrence-item" ${clickAction}>
-                            <div class="occ-avatar">${initials}</div>
-                            <div class="occ-info">
-                                <span class="occ-name" style="font-weight:700;">${name}</span>
-                                <span class="occ-desc" style="color:var(--primary); font-weight:600;">${data.count} ocorrência${data.count > 1 ? 's' : ''} encontrada${data.count > 1 ? 's' : ''}</span>
-                            </div>
-                            ${isGlobal ? '<div class="occ-time">❯</div>' : ''}
-                        </div>`;
-                });
-            } else {
-                dailyData.forEach(item => {
-                    const initials = item.name ? item.name.substring(0, 2).toUpperCase() : '??';
-                    const safeName = (item.name || '').replace(/'/g, "\\'");
-                    list.innerHTML += `
-                        <div class="occurrence-item" onclick="irParaInfracoes('${safeName}')" style="cursor: pointer;" title="Ver todas as infrações de ${item.name}">
-                            <div class="occ-avatar">${initials}</div>
-                            <div class="occ-info">
-                                <span class="occ-name">${item.name}</span>
-                                <span class="occ-desc">${item.desc}</span>
-                            </div>
-                            <div class="occ-time">${item.time}</div>
-                        </div>`;
-                });
-            }
+                // Em modo Empresarial, a ação padrão é abrir o detalhamento do curso/setor
+                list.innerHTML += `
+                    <div class="occurrence-item" onclick="applyCourseFilterByName('${name.replace(/'/g, "\\'")}')" style="cursor:pointer;" title="Clique para detalhes deste setor">
+                        <div class="occ-avatar">${initials}</div>
+                        <div class="occ-info">
+                            <span class="occ-name" style="font-weight:700;">${name}</span>
+                            <span class="occ-desc" style="color:var(--primary); font-weight:600;">${data.count} ocorrência${data.count > 1 ? 's' : ''} encontrada${data.count > 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="occ-time">❯</div>
+                    </div>`;
+            });
         } else {
-            list.innerHTML = `<div class="empty-state" style="padding:20px; text-align:center; color:#94a3b8; font-size:13px;">✅ Nenhuma infração neste dia.</div>`;
+            list.innerHTML = '';
         }
     }
 
@@ -153,21 +136,53 @@ function renderInterface() {
     }
 }
 
+function openCourseModal() {
+    const modal = document.getElementById('courseModal');
+    if (modal) {
+        modal.classList.add('active');
+        if (typeof lucide !== 'undefined') lucide.createIcons({ root: modal });
+    }
+}
+
+function closeCourseModal() {
+    const modal = document.getElementById('courseModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function selectSectorRecord(id, name) {
+    selectedSectorId = id;
+    const label = document.getElementById('currentSectorLabel');
+    if (label) label.innerText = name;
+
+    closeCourseModal();
+
+    // Recarrega todos os dados com o novo filtro
+    loadCalendarData();
+    loadCharts();
+}
+
 function applyCourseFilterByName(name) {
-    const modalButtons = document.querySelectorAll('#courseModal .btn-modal-action');
+    // Procura na tabela do modal pelo nome
+    const rows = document.querySelectorAll('.course-row');
     let foundId = null;
-    modalButtons.forEach(btn => {
-        if (btn.innerText.includes(name)) {
-            const onclick = btn.getAttribute('onclick');
-            const match = onclick.match(/selectCourse\((\d+)/);
-            if (match) foundId = match[1];
+    let foundName = '';
+
+    rows.forEach(row => {
+        const span = row.querySelector('.sector-cell span');
+        if (span && span.innerText.trim().toLowerCase() === name.toLowerCase()) {
+            const onclick = row.getAttribute('onclick');
+            const match = onclick.match(/selectSectorRecord\(['"]?([^'"]+)['"]?,\s*['"]?([^'"]+)['"]?\)/);
+            if (match) {
+                foundId = match[1];
+                foundName = match[2];
+            }
         }
     });
 
     if (foundId) {
-        selectCourse(foundId, name);
+        selectSectorRecord(foundId, foundName);
     } else {
-        openDetailModal(selectedDate.getMonth(), monthsFull[selectedDate.getMonth()]);
+        openCourseModal();
     }
 }
 
@@ -443,7 +458,7 @@ function openDetailModal(monthIndex, monthName, epiName = '') {
     if (!modal) return;
     const realMonth = monthIndex + 1;
     const currentYear = new Date().getFullYear();
-    const isGlobal = (window.userRole === 'super_admin' && selectedCourseId === 'all');
+    const isGlobal = (selectedCourseId === 'all');
 
     let displayTitle = `${monthName} de ${currentYear}`;
     if (epiName) displayTitle += ` - Filtro: ${epiName}`;
@@ -480,7 +495,7 @@ function openDetailModal(monthIndex, monthName, epiName = '') {
                     else if (conformidade < 90) riskIcon = '<span class="risk-triangle yellow">▲</span>';
 
                     tbody.innerHTML += `
-                        <tr onclick="selectCourse(${row.curso_id}, '${row.curso_nome.replace(/'/g, "\\'")}')" style="cursor: pointer;">
+                        <tr onclick="selectSectorRecord(${row.curso_id}, '${row.curso_nome.replace(/'/g, "\\'")}')" style="cursor: pointer;">
                             <td>#${index + 1}</td>
                             <td style="font-weight:600;">${row.curso_nome}</td>
                             <td>${row.total_infracoes}</td>
@@ -515,10 +530,11 @@ function openDetailModal(monthIndex, monthName, epiName = '') {
 }
 
 function loadCharts() {
-    fetch(`${window.BASE_PATH}/api/charts?course_id=${selectedCourseId}`)
+    fetch(`${window.BASE_PATH}/api/charts?sector_id=${selectedSectorId}`)
         .then(res => res.json())
         .then(response => {
             if (response.summary) {
+                window.totalStudents = response.summary.total_students;
                 const elDia = document.getElementById('kpiDia');
                 const elSemana = document.getElementById('kpiSemana');
                 const elMes = document.getElementById('kpiMes');
@@ -540,6 +556,9 @@ function loadCharts() {
             const colorAll = '#E30613';
             const colorHelmet = '#1F2937';
             const colorGlasses = '#9CA3AF';
+            const colorJacket = '#f59e0b';
+            const colorApron = '#3b82f6';
+            const colorGloves = '#10b981';
             const chartType = 'bar';
 
             const ctxMain = document.getElementById('mainChart').getContext('2d');
@@ -548,31 +567,70 @@ function loadCharts() {
                 data: {
                     labels: monthsFull,
                     datasets: [
-                        { label: 'Capacete', data: response.bar.capacete, backgroundColor: colorHelmet, borderColor: colorHelmet, borderRadius: 4 },
+                        { label: 'Jaqueta', data: response.bar.jaqueta, backgroundColor: colorJacket, borderColor: colorJacket, borderRadius: 4 },
                         { label: 'Óculos', data: response.bar.oculos, backgroundColor: colorGlasses, borderColor: colorGlasses, borderRadius: 4 },
+                        { label: 'Capacete', data: response.bar.capacete, backgroundColor: colorHelmet, borderColor: colorHelmet, borderRadius: 4 },
+                        { label: 'Avental', data: response.bar.avental, backgroundColor: colorApron, borderColor: colorApron, borderRadius: 4 },
+                        { label: 'Luvas', data: response.bar.luvas, backgroundColor: colorGloves, borderColor: colorGloves, borderRadius: 4 },
                         { label: 'Total', data: response.bar.total, backgroundColor: colorAll, borderColor: colorAll, borderRadius: 4 },
 
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     onClick: (evt, active, chart) => {
                         const points = chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
                         if (points.length > 0) {
                             const monthIndex = points[0].index;
-                            openDetailModal(monthIndex, monthsFull[monthIndex]);
+                            const exactPoints = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                            let filterEPI = '';
+                            if (exactPoints.length > 0) {
+                                const datasetIndex = exactPoints[0].datasetIndex;
+                                const label = chart.data.datasets[datasetIndex].label;
+                                filterEPI = label === 'Total' ? '' : label;
+                            }
+                            openDetailModal(monthIndex, monthsFull[monthIndex], filterEPI);
                         }
                     },
-                    scales: { y: { beginAtZero: true } }
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 10,
+                            ticks: { stepSize: 1 },
+                            grid: { display: true, color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
+
+            const isDoughnutEmpty = response.doughnut.total === 0;
+            const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
+            const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
 
             const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
             doughnutChartInstance = new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: {
-                    labels: response.doughnut.labels,
-                    datasets: [{ data: response.doughnut.data, backgroundColor: [colorHelmet, colorGlasses, colorAll], borderWidth: 2 }]
+                    labels: isDoughnutEmpty ? ['Sem Infrações'] : response.doughnut.labels,
+                    datasets: [{
+                        data: isDoughnutEmpty ? [1] : response.doughnut.data,
+                        backgroundColor: doughnutBgColor,
+                        hoverBackgroundColor: doughnutHoverColor,
+                        borderWidth: 2
+                    }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '75%',
@@ -585,6 +643,32 @@ function loadCharts() {
                     }
                 }
             });
+
+            // Atualiza TOP OCORRÊNCIAS baseado no Doughnut Chart
+            const topList = document.getElementById('topInfractions');
+            if (topList) {
+                topList.innerHTML = '';
+                if (response.doughnut && response.doughnut.total > 0) {
+                    const dataLabels = response.doughnut.labels;
+                    const dataValues = response.doughnut.data;
+                    const max = Math.max(...dataValues);
+
+                    dataLabels.forEach((label, i) => {
+                        if (dataValues[i] > 0) {
+                            const pct = Math.round((dataValues[i] / max) * 100);
+                            topList.innerHTML += `
+                                <div class="list-item">
+                                    <span class="occ-name">${label}</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${pct}%;"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+            }
+
         })
         .catch(err => {
             console.error('Erro gráficos:', err);
@@ -691,3 +775,23 @@ function verificarNovasOcorrencias() {
 
 setInterval(verificarNovasOcorrencias, 5000);
 verificarNovasOcorrencias();
+
+// Desbloqueia o áudio automaticamente no primeiro clique do instrutor
+document.addEventListener('click', function unlockAudio() {
+    const dummyAudio = new Audio(`${window.BASE_PATH}/assets/som/notificacao.mp3`);
+    dummyAudio.volume = 0; // Toca mudo só para ganhar permissão
+    dummyAudio.play().then(() => {
+        console.log("🔊 Sistema de áudio ativado com sucesso!");
+        document.removeEventListener('click', unlockAudio);
+    }).catch(e => console.error("Erro ao ativar som:", e));
+}, { once: true });
+
+// Observer para disparar atualizações de badges quando o texto dos KPIs mudar
+const observer = new MutationObserver(() => {
+    updatePercentagesDinamicamente();
+});
+
+const config = { childList: true, characterData: true, subtree: true };
+if (document.getElementById('kpiDia')) observer.observe(document.getElementById('kpiDia'), config);
+if (document.getElementById('kpiSemana')) observer.observe(document.getElementById('kpiSemana'), config);
+if (document.getElementById('kpiMes')) observer.observe(document.getElementById('kpiMes'), config);

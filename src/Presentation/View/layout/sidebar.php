@@ -46,7 +46,12 @@ $currentRoute = str_replace($basePath, '', $currentPath);
         <div class="ai-chat-window" id="aiChatWindow">
             <div class="ai-chat-header">
                 <span>🤖 Assistente IA</span>
-                <button onclick="toggleAiChat()">&times;</button>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button onclick="toggleExpandAiChat()" id="expandAiBtn" title="Expandir/Reduzir">
+                        <i data-lucide="maximize-2"></i>
+                    </button>
+                    <button onclick="toggleAiChat()" title="Fechar Chat">&times;</button>
+                </div>
             </div>
             <div class="ai-chat-messages" id="aiChatMessages">
                 <div class="ai-message bot">Olá! Como posso ajudar você com o EPI Guard hoje?</div>
@@ -54,7 +59,7 @@ $currentRoute = str_replace($basePath, '', $currentPath);
             <div class="ai-chat-input">
                 <input type="text" id="aiChatInput" placeholder="Digite sua pergunta..." onkeypress="if(event.key==='Enter') sendAiMessage()">
                 <button onclick="sendAiMessage()">
-                    <i data-lucide="send" style="width:16px;height:16px;"></i>
+                    <i data-lucide="send"></i>
                 </button>
             </div>
         </div>
@@ -68,6 +73,39 @@ $currentRoute = str_replace($basePath, '', $currentPath);
     function toggleAiChat() {
         const chatWindow = document.getElementById('aiChatWindow');
         chatWindow.classList.toggle('open');
+    }
+
+    function toggleExpandAiChat() {
+        const chatWindow = document.getElementById('aiChatWindow');
+        chatWindow.classList.toggle('expanded');
+        
+        let backdrop = document.getElementById('ai-backdrop-overlay');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.id = 'ai-backdrop-overlay';
+            backdrop.className = 'ai-backdrop';
+            backdrop.onclick = () => {
+                if(chatWindow.classList.contains('expanded')) {
+                    toggleExpandAiChat();
+                } else {
+                    toggleAiChat();
+                }
+            };
+            chatWindow.parentNode.appendChild(backdrop);
+        }
+        
+        const isExpanded = chatWindow.classList.contains('expanded');
+        backdrop.classList.toggle('active', isExpanded);
+        
+        const btn = document.getElementById('expandAiBtn');
+        if (isExpanded) {
+            btn.innerHTML = '<i data-lucide="minimize-2"></i>';
+        } else {
+            btn.innerHTML = '<i data-lucide="maximize-2"></i>';
+        }
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     }
 
     function sendAiMessage() {

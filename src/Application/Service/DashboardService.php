@@ -48,7 +48,7 @@ class DashboardService
             );
     }
 
-    public function getChartData(): array
+    public function getChartData(?int $sectorId = null): array
     {
         $now = new \DateTimeImmutable();
         $year = (int)$now->format('Y');
@@ -56,13 +56,13 @@ class DashboardService
         return [
             'status' => 'success',
             'summary' => [
-                'today' => $this->occurrenceRepository->countDaily($now),
-                'week' => $this->occurrenceRepository->countWeekly($now),
-                'month' => $this->occurrenceRepository->countMonthly($now),
+                'today' => $this->occurrenceRepository->countDaily($now, $sectorId),
+                'week' => $this->occurrenceRepository->countWeekly($now, $sectorId),
+                'month' => $this->occurrenceRepository->countMonthly($now, $sectorId),
                 'total_students' => count($this->employeeRepository->findAll())
             ],
-            'bar' => $this->occurrenceRepository->getMonthlyInfractionStats($year),
-            'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi()
+            'bar' => $this->occurrenceRepository->getMonthlyInfractionStats($year, $sectorId),
+            'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi($sectorId)
         ];
     }
 }

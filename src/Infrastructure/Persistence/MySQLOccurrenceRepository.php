@@ -79,44 +79,65 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
         return [];
     }
 
-    public function countDaily(DateTimeInterface $date): int
+    public function countDaily(DateTimeInterface $date, ?int $sectorId = null): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM ocorrencias WHERE DATE(data_hora) = ? AND tipo = 'INFRACAO'");
+        $query = "SELECT COUNT(*) as total FROM ocorrencias o 
+                  JOIN funcionarios f ON o.funcionario_id = f.id 
+                  WHERE DATE(o.data_hora) = ? AND o.tipo = 'INFRACAO'";
+        if ($sectorId) $query .= " AND f.setor_id = ?";
+        
+        $stmt = $this->db->prepare($query);
         $dateStr = $date->format('Y-m-d');
-        $stmt->bind_param('s', $dateStr);
+        if ($sectorId) $stmt->bind_param('si', $dateStr, $sectorId);
+        else $stmt->bind_param('s', $dateStr);
+        
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
         return (int) $res['total'];
     }
 
-    public function countWeekly(DateTimeInterface $date): int
+    public function countWeekly(DateTimeInterface $date, ?int $sectorId = null): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM ocorrencias WHERE YEARWEEK(data_hora, 1) = YEARWEEK(?, 1) AND tipo = 'INFRACAO'");
+        $query = "SELECT COUNT(*) as total FROM ocorrencias o 
+                  JOIN funcionarios f ON o.funcionario_id = f.id 
+                  WHERE YEARWEEK(o.data_hora, 1) = YEARWEEK(?, 1) AND o.tipo = 'INFRACAO'";
+        if ($sectorId) $query .= " AND f.setor_id = ?";
+        
+        $stmt = $this->db->prepare($query);
         $dateStr = $date->format('Y-m-d');
-        $stmt->bind_param('s', $dateStr);
+        if ($sectorId) $stmt->bind_param('si', $dateStr, $sectorId);
+        else $stmt->bind_param('s', $dateStr);
+        
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
         return (int) $res['total'];
     }
 
-    public function countMonthly(DateTimeInterface $date): int
+    public function countMonthly(DateTimeInterface $date, ?int $sectorId = null): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM ocorrencias WHERE MONTH(data_hora) = MONTH(?) AND YEAR(data_hora) = YEAR(?) AND tipo = 'INFRACAO'");
+        $query = "SELECT COUNT(*) as total FROM ocorrencias o 
+                  JOIN funcionarios f ON o.funcionario_id = f.id 
+                  WHERE MONTH(o.data_hora) = MONTH(?) AND YEAR(o.data_hora) = YEAR(?) AND o.tipo = 'INFRACAO'";
+        if ($sectorId) $query .= " AND f.setor_id = ?";
+        
+        $stmt = $this->db->prepare($query);
         $dateStr = $date->format('Y-m-d');
-        $stmt->bind_param('ss', $dateStr, $dateStr);
+        if ($sectorId) $stmt->bind_param('ssi', $dateStr, $dateStr, $sectorId);
+        else $stmt->bind_param('ss', $dateStr, $dateStr);
+        
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
         return (int) $res['total'];
     }
 
-    public function getMonthlyInfractionStats(int $year): array
+    public function getMonthlyInfractionStats(int $year, ?int $sectorId = null): array
     {
-        // Consulta para pegar infrações por mês agrupadas por EPI
-        // Simulando os meses do ano (1-12)
-        $months = range(1, 12);
         $stats = [
             'capacete' => array_fill(0, 12, 0),
             'oculos' => array_fill(0, 12, 0),
+            'jaqueta' => array_fill(0, 12, 0),
+            'avental' => array_fill(0, 12, 0),
+            'luvas' => array_fill(0, 12, 0),
             'total' => array_fill(0, 12, 0)
         ];
 
@@ -126,14 +147,17 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
                 e.nome as epi_nome,
                 COUNT(*) as total
             FROM ocorrencias o
+            JOIN funcionarios f ON o.funcionario_id = f.id
             JOIN ocorrencia_epis oe ON o.id = oe.ocorrencia_id
             JOIN epis e ON oe.epi_id = e.id
             WHERE YEAR(o.data_hora) = ? AND o.tipo = 'INFRACAO'
-            GROUP BY mes, epi_nome
         ";
+        if ($sectorId) $query .= " AND f.setor_id = ?";
+        $query .= " GROUP BY mes, epi_nome";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $year);
+        if ($sectorId) $stmt->bind_param('ii', $year, $sectorId);
+        else $stmt->bind_param('i', $year);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -142,29 +166,64 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
             $nome = strtolower($row['epi_nome']);
             if (str_contains($nome, 'capacete')) {
                 $stats['capacete'][$mesIdx] += (int) $row['total'];
-            } elseif (str_contains($nome, 'oculos')) {
+            } elseif (str_contains($nome, 'oculos') || str_contains($nome, 'óculos')) {
                 $stats['oculos'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'jaqueta')) {
+                $stats['jaqueta'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'avental')) {
+                $stats['avental'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'luva')) {
+                $stats['luvas'][$mesIdx] += (int) $row['total'];
             }
-            $stats['total'][$mesIdx] += (int) $row['total'];
+        }
+
+        $queryTotal = "
+            SELECT MONTH(o.data_hora) as mes, COUNT(*) as qtd
+            FROM ocorrencias o
+            JOIN funcionarios f ON o.funcionario_id = f.id
+            WHERE YEAR(o.data_hora) = ? AND o.tipo = 'INFRACAO'
+        ";
+        if ($sectorId) $queryTotal .= " AND f.setor_id = ?";
+        $queryTotal .= " GROUP BY mes";
+        
+        $stmtTotal = $this->db->prepare($queryTotal);
+        if ($sectorId) $stmtTotal->bind_param('ii', $year, $sectorId);
+        else $stmtTotal->bind_param('i', $year);
+        $stmtTotal->execute();
+        $resTotal = $stmtTotal->get_result();
+        
+        while ($row = $resTotal->fetch_assoc()) {
+            $mesIdx = (int) $row['mes'] - 1;
+            if ($mesIdx >= 0 && $mesIdx < 12) {
+                $stats['total'][$mesIdx] = (int) $row['qtd'];
+            }
         }
 
         return $stats;
     }
 
-    public function getInfractionDistributionByEpi(): array
+    public function getInfractionDistributionByEpi(?int $sectorId = null): array
     {
+        $year = (int) date('Y');
         $query = "
             SELECT 
                 e.nome,
                 COUNT(*) as total
             FROM ocorrencias o
+            JOIN funcionarios f ON o.funcionario_id = f.id
             JOIN ocorrencia_epis oe ON o.id = oe.ocorrencia_id
             JOIN epis e ON oe.epi_id = e.id
-            WHERE o.tipo = 'INFRACAO'
-            GROUP BY e.nome
+            WHERE o.tipo = 'INFRACAO' AND YEAR(o.data_hora) = ?
         ";
+        if ($sectorId) $query .= " AND f.setor_id = ?";
+        $query .= " GROUP BY e.nome";
 
-        $result = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
+        if ($sectorId) $stmt->bind_param('ii', $year, $sectorId);
+        else $stmt->bind_param('i', $year);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
         $labels = [];
         $data = [];
         $totalSum = 0;
@@ -175,10 +234,10 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
             $totalSum += (int) $row['total'];
         }
 
-        if (empty($labels)) {
+        if (empty($labels) || $totalSum === 0) {
             return [
-                'labels' => ['Sem Infrações'],
-                'data' => [0],
+                'labels' => [],
+                'data' => [],
                 'total' => 0
             ];
         }

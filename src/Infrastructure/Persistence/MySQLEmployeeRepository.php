@@ -110,7 +110,7 @@ class MySQLEmployeeRepository implements EmployeeRepositoryInterface
         
         return new Employee(
             name: $row['nome'],
-            cpf: new CPF('00000000000'), // Placeholder pois o campo não existe na tabela
+            cpf: new CPF('12345678909'), // Placeholder válido (matematicamente) pois o campo não existe na tabela
             enrollmentNumber: (string) $row['id'],
             department: $department,
             id: (int) $row['id'],

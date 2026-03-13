@@ -145,125 +145,128 @@
         <?php include __DIR__ . '/../layout/sidebar.php'; ?>
 
         <main class="main-content">
-            <!-- Header -->
-            <div class="setor-header">
-                <div class="page-title">
-                    <h1>Gestão de Setor</h1>
-                    <p>Gerencie as áreas e os respectivos EPIs obrigatórios</p>
+            <div id="page-content-wrapper" class="content-fade">
+                <!-- Header -->
+                <div class="setor-header">
+                    <div class="page-title">
+                        <h1>Gestão de Setor</h1>
+                        <p>Gerencie as áreas e os respectivos EPIs obrigatórios</p>
+                    </div>
+                    <button class="btn-add-setor" onclick="openModal()">
+                        <i class="fa-solid fa-plus"></i> Adicionar Setor
+                    </button>
                 </div>
-                <button class="btn-add-setor" onclick="openModal()">
-                    <i class="fa-solid fa-plus"></i> Adicionar Setor
-                </button>
-            </div>
 
-            <!-- Filtros -->
-            <div class="setor-filters">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Pesquisar setores...">
+                <!-- Filtros -->
+                <div class="setor-filters">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Pesquisar setores...">
+                    </div>
+                    <select>
+                        <option>Filtrar Setores (Todos)</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                    </select>
                 </div>
-                <select>
-                    <option>Filtrar Setores (Todos)</option>
-                    <option value="ativo">Ativos</option>
-                    <option value="inativo">Inativos</option>
-                </select>
-            </div>
 
-            <!-- Tabela -->
-            <div class="setor-table-wrapper">
-                <table class="setor-table">
-                    <thead>
-                        <tr>
-                            <th>Nome do Setor</th>
-                            <th>Funcionários Ativos</th>
-                            <th>EPIs Obrigatórios</th>
-                            <th style="text-align: right;">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="setoresTableBody">
-                        <tr>
-                            <td>
-                                <div class="setor-nome">Soldagem TIG</div>
-                                <div class="setor-desc">Área de soldagem pesada</div>
-                            </td>
-                            <td><span class="setor-count">12</span></td>
-                            <td>
-                                <div class="epi-icons">
-                                    <span class="epi-icon-badge" title="Óculos"><i class="fa-solid fa-glasses"></i></span>
-                                    <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
-                                    <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
-                                    <span class="epi-icon-badge" title="Protetor Auricular"><i class="fa-solid fa-head-side-virus"></i></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="setor-actions">
-                                    <span class="status-indicator" title="Ativo"></span>
-                                    <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="setor-nome">Pintura Automotiva</div>
-                                <div class="setor-desc">Cabine de pintura spray</div>
-                            </td>
-                            <td><span class="setor-count">8</span></td>
-                            <td>
-                                <div class="epi-icons">
-                                    <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
-                                    <span class="epi-icon-badge" title="Máscara"><i class="fa-solid fa-mask-face"></i></span>
-                                    <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="setor-actions">
-                                    <span class="status-indicator" title="Ativo"></span>
-                                    <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="setor-nome">Usinagem CNC</div>
-                                <div class="setor-desc">Tornos e fresas CNC</div>
-                            </td>
-                            <td><span class="setor-count">15</span></td>
-                            <td>
-                                <div class="epi-icons">
-                                    <span class="epi-icon-badge" title="Máscara"><i class="fa-solid fa-mask-face"></i></span>
-                                    <span class="epi-icon-badge" title="Protetor Auricular"><i class="fa-solid fa-head-side-virus"></i></span>
-                                    <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="setor-actions">
-                                    <span class="status-indicator" title="Ativo"></span>
-                                    <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="setor-nome">Almoxarifado</div>
-                                <div class="setor-desc">Gestão e entrega de materiais</div>
-                            </td>
-                            <td><span class="setor-count">5</span></td>
-                            <td>
-                                <div class="epi-icons">
-                                    <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
-                                    <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="setor-actions">
-                                    <span class="status-indicator" title="Ativo"></span>
-                                    <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Tabela -->
+                <div class="setor-table-wrapper">
+                    <table class="setor-table">
+                        <thead>
+                            <tr>
+                                <th>Nome do Setor</th>
+                                <th>Funcionários Ativos</th>
+                                <th>EPIs Obrigatórios</th>
+                                <th style="text-align: right;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="setoresTableBody">
+                            <tr>
+                                <td>
+                                    <div class="setor-nome">Soldagem TIG</div>
+                                    <div class="setor-desc">Área de soldagem pesada</div>
+                                </td>
+                                <td><span class="setor-count">12</span></td>
+                                <td>
+                                    <div class="epi-icons">
+                                        <span class="epi-icon-badge" title="Óculos"><i class="fa-solid fa-glasses"></i></span>
+                                        <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
+                                        <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
+                                        <span class="epi-icon-badge" title="Protetor Auricular"><i class="fa-solid fa-head-side-virus"></i></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="setor-actions">
+                                        <span class="status-indicator" title="Ativo"></span>
+                                        <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="setor-nome">Pintura Automotiva</div>
+                                    <div class="setor-desc">Cabine de pintura spray</div>
+                                </td>
+                                <td><span class="setor-count">8</span></td>
+                                <td>
+                                    <div class="epi-icons">
+                                        <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
+                                        <span class="epi-icon-badge" title="Máscara"><i class="fa-solid fa-mask-face"></i></span>
+                                        <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="setor-actions">
+                                        <span class="status-indicator" title="Ativo"></span>
+                                        <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="setor-nome">Usinagem CNC</div>
+                                    <div class="setor-desc">Tornos e fresas CNC</div>
+                                </td>
+                                <td><span class="setor-count">15</span></td>
+                                <td>
+                                    <div class="epi-icons">
+                                        <span class="epi-icon-badge" title="Máscara"><i class="fa-solid fa-mask-face"></i></span>
+                                        <span class="epi-icon-badge" title="Protetor Auricular"><i class="fa-solid fa-head-side-virus"></i></span>
+                                        <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="setor-actions">
+                                        <span class="status-indicator" title="Ativo"></span>
+                                        <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="setor-nome">Almoxarifado</div>
+                                    <div class="setor-desc">Gestão e entrega de materiais</div>
+                                </td>
+                                <td><span class="setor-count">5</span></td>
+                                <td>
+                                    <div class="epi-icons">
+                                        <span class="epi-icon-badge" title="Capacete"><i class="fa-solid fa-hard-hat"></i></span>
+                                        <span class="epi-icon-badge" title="Luvas"><i class="fa-solid fa-mitten"></i></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="setor-actions">
+                                        <span class="status-indicator" title="Ativo"></span>
+                                        <button class="btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </main>
         </main>
     </div>
 
