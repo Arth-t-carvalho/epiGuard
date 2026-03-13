@@ -75,6 +75,18 @@
                             <i data-lucide="layers"></i>
                             <span>Filtrar por Setor</span>
                         </button>
+                        <h3 class="chart-title">Visão Geral Trimestral</h3>
+                        
+                        <!-- GATILHO MINIMALISTA -->
+                        <div class="minimal-filter-trigger" onclick="openCourseModal()">
+                            <div class="filter-info">
+                                <span class="filter-label">Setor Ativo</span>
+                                <span id="currentSectorLabel" class="filter-value">Empresa Inteira</span>
+                            </div>
+                            <div class="filter-icon">
+                                <i data-lucide="chevron-down"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="chart-container" style="height: 300px;">
                         <canvas id="mainChart"></canvas>

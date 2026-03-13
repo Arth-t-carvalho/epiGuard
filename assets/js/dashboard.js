@@ -156,6 +156,9 @@ function selectSectorRecord(id, name) {
 
     closeCourseModal();
 
+    
+    closeCourseModal();
+    
     // Recarrega todos os dados com o novo filtro
     loadCalendarData();
     loadCharts();
@@ -604,6 +607,16 @@ function loadCharts() {
                             }
                         }
                     },
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -618,6 +631,7 @@ function loadCharts() {
 
             const isDoughnutEmpty = response.doughnut.total === 0;
             const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
+            const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#f59e0b', '#3b82f6'];
             const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
 
             const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
