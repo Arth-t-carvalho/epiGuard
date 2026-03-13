@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>epiGuard - Autenticação Facchini</title>
+    <script>
+        // Restaura a tela estendida se viermos de uma transição
+        if (sessionStorage.getItem('auth-transition') === 'true') {
+            document.documentElement.classList.add('entering-transition');
+            sessionStorage.removeItem('auth-transition');
+        }
+    </script>
     <!-- Google Fonts: Inter e Outfit para uma estética premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +21,8 @@
 </head>
 <body>
 
-    <!-- Splash Screen Overlay -->
-    <div id="splash-screen" class="splash-screen">
+    <!-- Splash Screen Overlay (Inicia oculta) -->
+    <div id="splash-screen" class="splash-screen hidden">
         <div class="splash-content">
             <h1 class="facchini-logo">FACCHINI</h1>
             <p class="splash-subtitle">AUTENTICAR SISTEMA</p>
@@ -27,8 +34,8 @@
         </div>
     </div>
 
-    <!-- Main Login Container -->
-    <main class="login-container hidden">
+    <!-- Main Login Container (Inicia visível) -->
+    <main class="login-container">
         <div class="login-wrapper">
             <!-- Left Side: Sidebar -->
             <div class="login-sidebar">
@@ -93,7 +100,7 @@
                         <div class="input-group">
                             <div class="label-row">
                                 <label for="password">SENHA</label>
-                                <a href="#" class="link-forgot">Recuperar senha?</a>
+                                <a href="<?= BASE_PATH ?>/recuperar-senha" class="link-forgot link-login">Recuperar senha?</a>
                             </div>
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-lock input-icon"></i>
@@ -109,7 +116,7 @@
                         </button>
 
                         <div class="form-footer">
-                            <p>Ainda não possui acesso? <a href="#" class="link-register">Solicitar Registo</a></p>
+                            <p>Ainda não possui acesso? <a href="<?= BASE_PATH ?>/cadastro" class="link-register">Solicitar Registo</a></p>
                         </div>
                     </form>
                 </div>

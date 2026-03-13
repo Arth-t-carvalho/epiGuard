@@ -28,6 +28,11 @@ if ($basePath !== '' && strpos($path, $basePath) === 0) {
 // Remove query strings
 $path = explode('?', $path)[0];
 
+// Remove o '/index.php' caso presente
+if (strpos($path, '/index.php') === 0) {
+    $path = substr($path, strlen('/index.php'));
+}
+
 if ($path === '' || $path === '/') $path = '/login';
 
 if (isset($routes[$path])) {

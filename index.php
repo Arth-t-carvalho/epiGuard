@@ -37,8 +37,17 @@ define('BASE_PATH', $basePath);
 
 // Remover o basePath da URI para obter o caminho da rota
 $path = parse_url($uri, PHP_URL_PATH);
+
+// Remove query strings
+$path = explode('?', $path)[0];
+
 if ($basePath !== '' && strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
+}
+
+// Remove o '/index.php' caso presente
+if (strpos($path, '/index.php') === 0) {
+    $path = substr($path, strlen('/index.php'));
 }
 
 if ($path === '' || $path === '/') $path = '/login';

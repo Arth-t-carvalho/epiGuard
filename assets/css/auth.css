@@ -21,7 +21,8 @@ body {
     height: 100vh;
     overflow: hidden;
     position: relative;
-    background: #8b1418; /* Base sólida */
+    background: #8b1418;
+    /* Base sólida */
 }
 
 /* Camada de Gradiente Suave */
@@ -32,7 +33,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(-45deg, #8b1418, #cc1d24, #b3171b, #8b1418);
+    background: linear-gradient(-45deg, #1f0102, #6b0c10, #c4141a, #8f1014, #2a0304);
     background-size: 400% 400%;
     animation: gradientAnimation 25s ease infinite;
     z-index: -2;
@@ -54,14 +55,27 @@ body::after {
 }
 
 @keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @keyframes patternMove {
-    from { background-position: 0 0; }
-    to { background-position: 1000px 1000px; }
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 1000px 1000px;
+    }
 }
 
 /* Splash Screen */
@@ -130,6 +144,7 @@ body::after {
 /* Sidebar */
 .login-sidebar {
     flex: 0 0 50%;
+    width: 50%;
     background: transparent;
     /* Mostra o fundo animado */
     color: var(--white);
@@ -137,6 +152,15 @@ body::after {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: flex 1s cubic-bezier(0.77, 0, 0.175, 1),
+        width 1s cubic-bezier(0.77, 0, 0.175, 1),
+        padding 1s cubic-bezier(0.77, 0, 0.175, 1),
+        opacity 0.6s ease;
+    overflow: hidden;
+}
+
+.sidebar-content {
+    min-width: 450px;
 }
 
 .brand-group {
@@ -171,6 +195,7 @@ body::after {
     background: var(--white);
     margin-right: 13px;
 }
+
 .facchini-subtitle::after {
     content: '';
     width: 30px;
@@ -286,6 +311,7 @@ body::after {
 /* Form Area */
 .login-form-area {
     flex: 0 0 50%;
+    width: 50%;
     background: var(--white);
     display: flex;
     align-items: center;
@@ -295,6 +321,10 @@ body::after {
     /* Arredondamento conforme imagem */
     border-bottom-left-radius: 60px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transition: flex 1s cubic-bezier(0.77, 0, 0.175, 1),
+        width 1s cubic-bezier(0.77, 0, 0.175, 1),
+        border-radius 1s cubic-bezier(0.77, 0, 0.175, 1),
+        padding 1s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .form-container {
@@ -439,4 +469,43 @@ body::after {
     .login-form-area {
         flex: 0 0 100%;
     }
+}
+
+/* =========================================================
+   Transições Fluidas (Deslize de Painéis)
+========================================================= */
+
+/* Layout Reverso (Cadastro: Vermelho na Direita, Branco na Esquerda) */
+.login-wrapper.reverse-layout {
+    flex-direction: row-reverse;
+}
+
+.login-wrapper.reverse-layout .login-form-area {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 60px;
+    border-bottom-right-radius: 60px;
+}
+
+/* Ocultar barra lateral e expandir formulário para 100% */
+html.auth-transition-active .login-sidebar,
+html.entering-transition .login-sidebar {
+    flex: 0 0 0% !important;
+    width: 0% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    opacity: 0 !important;
+}
+
+html.auth-transition-active .login-form-area,
+html.entering-transition .login-form-area {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+}
+
+/* Remove a transição durante a entrada para que comece do frame certo imediatamente */
+html.entering-transition .login-sidebar,
+html.entering-transition .login-form-area {
+    transition: none !important;
 }
