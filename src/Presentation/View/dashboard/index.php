@@ -69,6 +69,12 @@
                 <!-- MAIN CHART -->
                 <div class="chart-card card">
                     <div class="chart-header-actions">
+                        <h3 class="chart-title">Visão Geral Mensal</h3>
+                        <!-- BOTÃO DE FILTRO PREMIUM NO CARD -->
+                        <button class="btn-premium-filter" onclick="openCourseModal()">
+                            <i data-lucide="layers"></i>
+                            <span>Filtrar por Setor</span>
+                        </button>
                         <h3 class="chart-title">Visão Geral Trimestral</h3>
                         
                         <!-- GATILHO MINIMALISTA -->

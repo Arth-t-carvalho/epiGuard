@@ -135,6 +135,9 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
         $stats = [
             'capacete' => array_fill(0, 12, 0),
             'oculos' => array_fill(0, 12, 0),
+            'jaqueta' => array_fill(0, 12, 0),
+            'avental' => array_fill(0, 12, 0),
+            'luvas' => array_fill(0, 12, 0),
             'total' => array_fill(0, 12, 0)
         ];
 
@@ -165,6 +168,34 @@ class MySQLOccurrenceRepository implements OccurrenceRepositoryInterface
                 $stats['capacete'][$mesIdx] += (int) $row['total'];
             } elseif (str_contains($nome, 'oculos') || str_contains($nome, 'óculos')) {
                 $stats['oculos'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'jaqueta')) {
+                $stats['jaqueta'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'avental')) {
+                $stats['avental'][$mesIdx] += (int) $row['total'];
+            } elseif (str_contains($nome, 'luva')) {
+                $stats['luvas'][$mesIdx] += (int) $row['total'];
+            }
+        }
+
+        $queryTotal = "
+            SELECT MONTH(o.data_hora) as mes, COUNT(*) as qtd
+            FROM ocorrencias o
+            JOIN funcionarios f ON o.funcionario_id = f.id
+            WHERE YEAR(o.data_hora) = ? AND o.tipo = 'INFRACAO'
+        ";
+        if ($sectorId) $queryTotal .= " AND f.setor_id = ?";
+        $queryTotal .= " GROUP BY mes";
+        
+        $stmtTotal = $this->db->prepare($queryTotal);
+        if ($sectorId) $stmtTotal->bind_param('ii', $year, $sectorId);
+        else $stmtTotal->bind_param('i', $year);
+        $stmtTotal->execute();
+        $resTotal = $stmtTotal->get_result();
+        
+        while ($row = $resTotal->fetch_assoc()) {
+            $mesIdx = (int) $row['mes'] - 1;
+            if ($mesIdx >= 0 && $mesIdx < 12) {
+                $stats['total'][$mesIdx] = (int) $row['qtd'];
             }
         }
 

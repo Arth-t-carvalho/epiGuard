@@ -153,6 +153,9 @@ function selectSectorRecord(id, name) {
     selectedSectorId = id;
     const label = document.getElementById('currentSectorLabel');
     if (label) label.innerText = name;
+
+    closeCourseModal();
+
     
     closeCourseModal();
     
@@ -556,6 +559,9 @@ function loadCharts() {
             const colorAll = '#E30613';
             const colorHelmet = '#1F2937';
             const colorGlasses = '#9CA3AF';
+            const colorJacket = '#f59e0b';
+            const colorApron = '#3b82f6';
+            const colorGloves = '#10b981';
             const chartType = 'bar';
 
             const ctxMain = document.getElementById('mainChart').getContext('2d');
@@ -564,8 +570,11 @@ function loadCharts() {
                 data: {
                     labels: monthsFull,
                     datasets: [
-                        { label: 'Capacete', data: response.bar.capacete, backgroundColor: colorHelmet, borderColor: colorHelmet, borderRadius: 4 },
+                        { label: 'Jaqueta', data: response.bar.jaqueta, backgroundColor: colorJacket, borderColor: colorJacket, borderRadius: 4 },
                         { label: 'Óculos', data: response.bar.oculos, backgroundColor: colorGlasses, borderColor: colorGlasses, borderRadius: 4 },
+                        { label: 'Capacete', data: response.bar.capacete, backgroundColor: colorHelmet, borderColor: colorHelmet, borderRadius: 4 },
+                        { label: 'Avental', data: response.bar.avental, backgroundColor: colorApron, borderColor: colorApron, borderRadius: 4 },
+                        { label: 'Luvas', data: response.bar.luvas, backgroundColor: colorGloves, borderColor: colorGloves, borderRadius: 4 },
                         { label: 'Total', data: response.bar.total, backgroundColor: colorAll, borderColor: colorAll, borderRadius: 4 },
 
                     ]
@@ -598,6 +607,16 @@ function loadCharts() {
                             }
                         }
                     },
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -611,6 +630,7 @@ function loadCharts() {
             });
 
             const isDoughnutEmpty = response.doughnut.total === 0;
+            const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
             const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#f59e0b', '#3b82f6'];
             const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
 
