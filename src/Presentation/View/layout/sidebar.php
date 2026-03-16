@@ -15,7 +15,11 @@ $currentRoute = str_replace($basePath, '', $currentPath);
             <i data-lucide="layout-dashboard"></i>
             <span>Dashboard</span>
         </a>
+<<<<<<< HEAD
         <a href="#" class="nav-item">
+=======
+        <a href="<?= BASE_PATH ?>/monitoring" class="nav-item <?= ($currentRoute === '/monitoring') ? 'active' : '' ?>">
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
             <i data-lucide="monitor"></i>
             <span>Monitoramento</span>
         </a>

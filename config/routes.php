@@ -9,6 +9,11 @@ use epiGuard\Presentation\Controller\OccurrenceController;
 return [
     '/login' => [AuthController::class, 'index'],
     '/register' => [AuthController::class, 'register'],
+<<<<<<< HEAD
+=======
+    '/cadastro' => [AuthController::class, 'register'],
+    '/recuperar-senha' => [AuthController::class, 'resetPassword'],
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     '/dashboard' => [DashboardController::class, 'index'],
     '/api/charts' => [\epiGuard\Presentation\Controller\Api\ChartApiController::class, 'index'],
     '/api/calendar' => [\epiGuard\Presentation\Controller\Api\OccurrenceApiController::class, 'calendar'],
@@ -23,4 +28,9 @@ return [
     '/api/departments/create' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'create'],
     '/api/departments/update' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'update'],
     '/api/departments/delete' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'delete'],
+<<<<<<< HEAD
+=======
+    '/api/departments/employees' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'employees'],
+    '/monitoring' => [\epiGuard\Presentation\Controller\MonitoringController::class, 'index'],
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 ];

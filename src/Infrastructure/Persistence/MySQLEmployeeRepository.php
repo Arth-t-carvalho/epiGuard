@@ -106,6 +106,18 @@ class MySQLEmployeeRepository implements EmployeeRepositoryInterface
     {
         $department = $this->departmentRepository->findById((int) $row['setor_id']);
         
+<<<<<<< HEAD
+=======
+        if (!$department) {
+            $department = new \epiGuard\Domain\Entity\Department(
+                name: 'Setor Desconhecido',
+                code: 'N/A',
+                epis: [],
+                id: (int) $row['setor_id']
+            );
+        }
+        
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         return new Employee(
             name: $row['nome'],
             cpf: new CPF('12345678909'),

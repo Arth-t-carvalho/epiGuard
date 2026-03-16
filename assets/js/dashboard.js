@@ -12,6 +12,14 @@ let doughnutChartInstance = null;
 let selectedCourseId = 'all'; // Legado, mantido para compatibilidade de funções
 let selectedSectorId = 'all'; // Novo: Filtro de setor para visão empresarial
 
+<<<<<<< HEAD
+=======
+// Cores para os gráficos
+const colorHelmet = '#1F2937';
+const colorGlasses = '#9CA3AF';
+const colorAll = '#E30613';
+
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 // Arrays auxiliares
 const monthsFull = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
@@ -136,11 +144,20 @@ function renderInterface() {
     }
 }
 
+<<<<<<< HEAD
+=======
+let selectedSectorIds = []; // Novo: Array de setores selecionados
+
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 function openCourseModal() {
     const modal = document.getElementById('courseModal');
     if (modal) {
         modal.classList.add('active');
         if (typeof lucide !== 'undefined') lucide.createIcons({ root: modal });
+<<<<<<< HEAD
+=======
+        updateSelectionUI(); // Sincroniza checks com o estado
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     }
 }
 
@@ -149,6 +166,7 @@ function closeCourseModal() {
     if (modal) modal.classList.remove('active');
 }
 
+<<<<<<< HEAD
 function selectSectorRecord(id, name) {
     selectedSectorId = id;
     const label = document.getElementById('currentSectorLabel');
@@ -160,35 +178,154 @@ function selectSectorRecord(id, name) {
     closeCourseModal();
     
     // Recarrega todos os dados com o novo filtro
+=======
+function toggleAllSectors(checked) {
+    const checks = document.querySelectorAll('.sector-check');
+    checks.forEach(c => c.checked = checked);
+    updateSelectionState();
+}
+
+function toggleSectorSelect(id) {
+    if (id === 'all') {
+        const checkAll = document.getElementById('check-all');
+        checkAll.checked = !checkAll.checked;
+        toggleAllSectors(checkAll.checked);
+        return;
+    }
+    const check = document.querySelector(`.sector-check[value="${id}"]`);
+    if (check) {
+        check.checked = !check.checked;
+        updateSelectionState();
+    }
+}
+
+function updateSelectionState() {
+    const checks = document.querySelectorAll('.sector-check');
+    const checked = Array.from(checks).filter(c => c.checked);
+    const checkAll = document.getElementById('check-all');
+
+    if (checked.length === checks.length) {
+        checkAll.checked = true;
+        checkAll.indeterminate = false;
+    } else if (checked.length === 0) {
+        checkAll.checked = false;
+        checkAll.indeterminate = false;
+    } else {
+        checkAll.checked = false;
+        checkAll.indeterminate = true;
+    }
+}
+
+function updateSelectionUI() {
+    const checks = document.querySelectorAll('.sector-check');
+    checks.forEach(c => {
+        c.checked = selectedSectorIds.includes(parseInt(c.value));
+    });
+    updateSelectionState();
+}
+
+function applySectorsFilter() {
+    const checks = document.querySelectorAll('.sector-check:checked');
+    selectedSectorIds = Array.from(checks).map(c => parseInt(c.value));
+
+    const container = document.getElementById('activeFiltersContainer');
+    const countLabel = document.getElementById('selectedSectorsCount');
+
+    const allCount = document.querySelectorAll('.sector-check').length;
+
+    if (selectedSectorIds.length === 0 || selectedSectorIds.length === allCount) {
+        selectedSectorId = 'all'; // Compatibilidade
+        if (container) container.style.display = 'none';
+    } else {
+        selectedSectorId = selectedSectorIds.join(','); // Compatibilidade/Novo formato
+        if (container) {
+            container.style.display = 'flex';
+            if (countLabel) countLabel.innerText = selectedSectorIds.length;
+        }
+    }
+
+    closeCourseModal();
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     loadCalendarData();
     loadCharts();
 }
 
+<<<<<<< HEAD
 function applyCourseFilterByName(name) {
     // Procura na tabela do modal pelo nome
     const rows = document.querySelectorAll('.course-row');
     let foundId = null;
     let foundName = '';
+=======
+// Mantendo para compatibilidade caso algo ainda use
+function selectSectorRecord(id, name) {
+    if (id === 'all') {
+        selectedSectorIds = [];
+    } else {
+        selectedSectorIds = [parseInt(id)];
+    }
+    applySectorsFilter();
+}
+
+function applyCourseFilterByName(name) {
+    // Procura na lista do modal pelo nome
+    const rows = document.querySelectorAll('.selection-row');
+    let foundId = null;
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 
     rows.forEach(row => {
         const span = row.querySelector('.sector-cell span');
         if (span && span.innerText.trim().toLowerCase() === name.toLowerCase()) {
+<<<<<<< HEAD
             const onclick = row.getAttribute('onclick');
             const match = onclick.match(/selectSectorRecord\(['"]?([^'"]+)['"]?,\s*['"]?([^'"]+)['"]?\)/);
             if (match) {
                 foundId = match[1];
                 foundName = match[2];
+=======
+            const input = row.querySelector('.sector-check');
+            if (input) {
+                foundId = input.value;
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
             }
         }
     });
 
     if (foundId) {
+<<<<<<< HEAD
         selectSectorRecord(foundId, foundName);
+=======
+        // Seleciona apenas este e aplica
+        const checks = document.querySelectorAll('.sector-check');
+        checks.forEach(c => c.checked = (c.value == foundId));
+        applySectorsFilter();
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     } else {
         openCourseModal();
     }
 }
 
+<<<<<<< HEAD
+=======
+function filterSectors(query) {
+    const filter = query.toLowerCase();
+    const rows = document.querySelectorAll('.selection-row');
+    
+    rows.forEach(row => {
+        if (row.classList.contains('global-row')) return;
+        
+        const span = row.querySelector('.sector-cell span');
+        const text = span ? span.innerText.toLowerCase() : '';
+        
+        if (text.includes(filter)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 function irParaInfracoes(nome) {
     if (!nome) return;
     const url = `infracoes.php?periodo=todos&busca=${encodeURIComponent(nome)}`;
@@ -461,7 +598,11 @@ function openDetailModal(monthIndex, monthName, epiName = '') {
     if (!modal) return;
     const realMonth = monthIndex + 1;
     const currentYear = new Date().getFullYear();
+<<<<<<< HEAD
     const isGlobal = (selectedCourseId === 'all');
+=======
+    const isGlobal = (selectedSectorId === 'all');
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 
     let displayTitle = `${monthName} de ${currentYear}`;
     if (epiName) displayTitle += ` - Filtro: ${epiName}`;
@@ -475,7 +616,11 @@ function openDetailModal(monthIndex, monthName, epiName = '') {
         thead.innerHTML = `<th>Data</th><th>Aluno</th><th>Infração (EPI)</th><th>Horário</th><th>Status</th>`;
     }
 
+<<<<<<< HEAD
     let url = `${window.BASE_PATH}/api/modal_details?month=${realMonth}&year=${currentYear}&course_id=${selectedCourseId}`;
+=======
+    let url = `${window.BASE_PATH}/api/modal_details?month=${realMonth}&year=${currentYear}&sector_id=${selectedSectorId}`;
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     if (epiName) url += `&epi=${encodeURIComponent(epiName)}`;
 
     fetch(url)
@@ -556,6 +701,7 @@ function loadCharts() {
             if (mainChartInstance) mainChartInstance.destroy();
             if (doughnutChartInstance) doughnutChartInstance.destroy();
 
+<<<<<<< HEAD
             const colorAll = '#E30613';
             const colorHelmet = '#1F2937';
             const colorGlasses = '#9CA3AF';
@@ -578,6 +724,64 @@ function loadCharts() {
                         { label: 'Total', data: response.bar.total, backgroundColor: colorAll, borderColor: colorAll, borderRadius: 4 },
 
                     ]
+=======
+            const epiColors = {
+                'capacete': { bg: '#1F2937', label: 'Capacete' },
+                'oculos': { bg: '#9CA3AF', label: 'Óculos' },
+                'óculos': { bg: '#9CA3AF', label: 'Óculos' },
+                'jaqueta': { bg: '#f59e0b', label: 'Jaqueta' },
+                'avental': { bg: '#3b82f6', label: 'Avental' },
+                'luvas': { bg: '#10b981', label: 'Luvas' },
+                'luva': { bg: '#10b981', label: 'Luvas' },
+                'mascara': { bg: '#6366f1', label: 'Máscara' },
+                'máscara': { bg: '#6366f1', label: 'Máscara' },
+                'protetor': { bg: '#ec4899', label: 'Protetor' }
+            };
+
+            const datasets = [];
+            const allowedEpis = response.allowed_epis || [];
+            
+            // Build datasets dynamically based on allowed EPIs
+            allowedEpis.forEach(fullName => {
+                const lowerName = fullName.toLowerCase();
+                let config = null;
+                let dataKey = null;
+
+                if (lowerName.includes('capacete')) { config = epiColors['capacete']; dataKey = 'capacete'; }
+                else if (lowerName.includes('oculos') || lowerName.includes('óculos')) { config = epiColors['oculos']; dataKey = 'oculos'; }
+                else if (lowerName.includes('jaqueta')) { config = epiColors['jaqueta']; dataKey = 'jaqueta'; }
+                else if (lowerName.includes('avental')) { config = epiColors['avental']; dataKey = 'avental'; }
+                else if (lowerName.includes('luva')) { config = epiColors['luvas']; dataKey = 'luvas'; }
+                else if (lowerName.includes('mascara') || lowerName.includes('máscara')) { config = epiColors['mascara']; dataKey = 'mascara'; }
+                else if (lowerName.includes('protetor')) { config = epiColors['protetor']; dataKey = 'protetor'; }
+                
+                if (config && response.bar[dataKey]) {
+                    datasets.push({
+                        label: config.label,
+                        data: response.bar[dataKey],
+                        backgroundColor: config.bg,
+                        borderColor: config.bg,
+                        borderRadius: 4
+                    });
+                }
+            });
+
+            // Always add Total
+            datasets.push({
+                label: 'Total',
+                data: response.bar.total,
+                backgroundColor: '#E30613',
+                borderColor: '#E30613',
+                borderRadius: 4
+            });
+
+            const ctxMain = document.getElementById('mainChart').getContext('2d');
+            mainChartInstance = new Chart(ctxMain, {
+                type: 'bar',
+                data: {
+                    labels: monthsFull,
+                    datasets: datasets
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
@@ -607,6 +811,7 @@ function loadCharts() {
                             }
                         }
                     },
+<<<<<<< HEAD
                         }
                     },
                     plugins: {
@@ -617,6 +822,8 @@ function loadCharts() {
                             }
                         }
                     },
+=======
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -630,7 +837,10 @@ function loadCharts() {
             });
 
             const isDoughnutEmpty = response.doughnut.total === 0;
+<<<<<<< HEAD
             const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#057c85ff', '#0b2e66ff'];
+=======
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
             const doughnutBgColor = isDoughnutEmpty ? ['#f1f5f9'] : [colorHelmet, colorGlasses, colorAll, '#f59e0b', '#3b82f6'];
             const doughnutHoverColor = isDoughnutEmpty ? ['#e2e8f0'] : undefined;
 

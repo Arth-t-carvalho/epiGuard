@@ -1974,6 +1974,7 @@ body {
 }
 
 /* =========================================
+<<<<<<< HEAD
    GATILHO DE FILTRO MINIMALISTA
    ========================================= */
 .minimal-filter-trigger {
@@ -1998,6 +1999,160 @@ body {
 .filter-info {
     display: flex;
     flex-direction: column;
+=======
+   GATILHO DE FILTRO MINIMALISTA (REMOVIDO / ADJUSTED)
+   ========================================= */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.active-filters-info {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.active-filters-info .active-count {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+/* MODAL PREMIUM ADJUSTMENTS */
+.modal-premium-content {
+    width: 450px !important;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-premium-body {
+    padding: 0 !important;
+    overflow-y: auto;
+}
+
+.modal-selection-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.selection-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.selection-row:hover {
+    background: #f8fafc;
+}
+
+.selection-main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Custom Checkbox */
+.custom-checkbox {
+    display: block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+    border-color: var(--primary);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.modal-premium-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-apply-filter {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(227, 6, 19, 0.2);
+}
+
+.btn-apply-filter:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(227, 6, 19, 0.3);
+}
+
+.btn-apply-filter i {
+    width: 18px;
+    height: 18px;
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 }
 
 .filter-label {
@@ -2022,6 +2177,150 @@ body {
     transition: transform 0.3s;
 }
 
+<<<<<<< HEAD
+=======
+/* EMPLOYEE AVATAR IN TABLES */
+.employee-cell {
+    padding: 8px 16px !important;
+}
+
+.employee-avatar-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.employee-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* CARDS GRID VIEW */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 20px;
+}
+
+.infraction-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.infraction-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-light);
+}
+
+.card-image-box {
+    position: relative;
+    height: 180px;
+    background: #f1f5f9;
+}
+
+.card-employee-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.status-badge-premium {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.status-badge-premium.pending {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fee2e2;
+}
+
+.status-badge-premium.resolved {
+    background: #f0fdf4;
+    color: #22c55e;
+    border: 1px solid #dcfce7;
+}
+
+.card-content-premium {
+    padding: 20px;
+}
+
+.infraction-card h4.employee-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.info-row-premium {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.info-row-premium i {
+    width: 16px;
+    color: var(--primary);
+}
+
+.card-footer-premium {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-card-action {
+    flex: 1;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-card-action:hover {
+    background: #f8fafc;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-card-action.success:hover {
+    background: #f0fdf4;
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 .minimal-filter-trigger:hover .filter-icon i {
     transform: translateY(2px);
     color: var(--primary);

@@ -18,6 +18,7 @@ spl_autoload_register(function ($class) {
     if (file_exists($file)) require $file;
 });
 
+<<<<<<< HEAD
 // Autoloader para classes do Domínio e Aplicação (namespace App\)
 spl_autoload_register(function ($class) {
     $prefix = 'App\\';
@@ -29,6 +30,8 @@ spl_autoload_register(function ($class) {
     if (file_exists($file)) require $file;
 });
 
+=======
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 
 session_start();
 

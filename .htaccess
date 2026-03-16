@@ -1,6 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+<<<<<<< HEAD
     RewriteBase /epiGuard/
+=======
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 
     # Ignorar arquivos e diretórios existentes
     RewriteCond %{REQUEST_FILENAME} !-f

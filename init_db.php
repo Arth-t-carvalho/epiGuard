@@ -7,12 +7,21 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $host = '127.0.0.1'; // Trocando localhost por IP direto
 $user = 'root';
+<<<<<<< HEAD
 $pass = ''; // Senha padrão XAMPP é vazia
+=======
+$pass = ''; // Senha resetada para vazia conforme teste de sucesso
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 $dbName = 'epi_guard';
 
 try {
     // 1. Conectar ao MySQL
+<<<<<<< HEAD
     $mysqli = new mysqli($host, $user, $pass);
+=======
+    $port = 3308;
+    $mysqli = new mysqli($host, $user, $pass, null, $port);
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     echo "Conectado ao MySQL.\n";
 
     // 2. Criar o banco de dados

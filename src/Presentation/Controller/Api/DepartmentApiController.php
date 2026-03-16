@@ -86,7 +86,11 @@ class DepartmentApiController
                     
                     $employee = new \epiGuard\Domain\Entity\Employee(
                         name: trim($nomeFunc),
+<<<<<<< HEAD
                         cpf: new \epiGuard\Domain\ValueObject\CPF('00000000000'), // Placeholder
+=======
+                        cpf: new \epiGuard\Domain\ValueObject\CPF('11144477735'), // Valid dummy CPF
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
                         enrollmentNumber: '', // Será gerado ou preenchido depois
                         department: $department
                     );
@@ -163,7 +167,11 @@ class DepartmentApiController
                     
                     $employee = new \epiGuard\Domain\Entity\Employee(
                         name: trim($nomeFunc),
+<<<<<<< HEAD
                         cpf: new \epiGuard\Domain\ValueObject\CPF('00000000000'),
+=======
+                        cpf: new \epiGuard\Domain\ValueObject\CPF('11144477735'),
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
                         enrollmentNumber: '',
                         department: $updatedDept
                     );
@@ -212,4 +220,34 @@ class DepartmentApiController
             echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * GET /api/departments/employees?id=X — Lista funcionários de um setor
+     */
+    public function employees(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        try {
+            $id = (int)($_GET['id'] ?? 0);
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'ID inválido']);
+                return;
+            }
+
+            $deptRepo = new MySQLDepartmentRepository();
+            $employeeRepo = new \epiGuard\Infrastructure\Persistence\MySQLEmployeeRepository($deptRepo);
+            
+            $employees = $employeeRepo->findByDepartment($id);
+            $names = array_map(fn($e) => $e->getName(), $employees);
+
+            echo json_encode(['success' => true, 'data' => $names]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+>>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 }
