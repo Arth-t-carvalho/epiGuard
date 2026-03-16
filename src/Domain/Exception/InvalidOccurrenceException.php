@@ -2,7 +2,7 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Exception;
+namespace epiGuard\Domain\Exception;
 
 class InvalidOccurrenceException extends DomainException
 {

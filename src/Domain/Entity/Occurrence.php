@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\Entity;
+namespace epiGuard\Domain\Entity;
 
-use App\Domain\ValueObject\OccurrenceStatus;
-use App\Domain\ValueObject\OccurrenceType;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Domain\ValueObject\OccurrenceType;
 use DateTimeImmutable;
 
 class Occurrence

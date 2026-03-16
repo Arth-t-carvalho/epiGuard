@@ -2,7 +2,7 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\ValueObject;
+namespace epiGuard\Domain\ValueObject;
 
 use InvalidArgumentException;
 
@@ -10,13 +10,14 @@ final class Email
 {
     private string $value;
 
-    public function __construct(string $email)
+    public function __construct(string $value)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException("Invalid email format.");
+        $value = trim($value);
+        if (empty($value)) {
+            throw new \InvalidArgumentException("Identifier cannot be empty.");
         }
 
-        $this->value = strtolower(trim($email));
+        $this->value = $value;
     }
 
     public function getValue(): string

@@ -2,7 +2,7 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Domain\ValueObject;
+namespace epiGuard\Domain\ValueObject;
 
 use InvalidArgumentException;
 
@@ -11,6 +11,7 @@ final class UserRole
     public const ADMIN = 'admin';
     public const OPERATOR = 'operator';
     public const VIEWER = 'viewer';
+    public const MANAGER = 'manager';
 
     private string $role;
 
@@ -30,6 +31,7 @@ final class UserRole
             self::ADMIN,
             self::OPERATOR,
             self::VIEWER,
+            self::MANAGER,
         ];
     }
 

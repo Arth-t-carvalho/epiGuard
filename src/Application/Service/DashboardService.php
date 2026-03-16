@@ -2,12 +2,12 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Service;
+namespace epiGuard\Application\Service;
 
-use App\Application\DTO\Response\DashboardSummary;
-use App\Domain\Repository\OccurrenceRepositoryInterface;
-use App\Domain\Repository\EmployeeRepositoryInterface;
-use App\Domain\ValueObject\OccurrenceStatus;
+use epiGuard\Application\DTO\Response\DashboardSummary;
+use epiGuard\Domain\Repository\OccurrenceRepositoryInterface;
+use epiGuard\Domain\Repository\EmployeeRepositoryInterface;
+use epiGuard\Domain\ValueObject\OccurrenceStatus;
 
 class DashboardService
 {
@@ -32,10 +32,10 @@ class DashboardService
         $resolvedOccurrencesCount = 0;
 
         foreach ($occurrences as $occurrence) {
-            if ($occurrence->getStatus()->isOpen() || $occurrence->getStatus()->getValue() === OccurrenceStatus::IN_PROGRESS) {
+            // Ajustado para usar o tipo ou status real do banco
+            if ($occurrence->getType()->getValue() === 'INFRACAO') {
                 $openOccurrencesCount++;
-            }
-            elseif ($occurrence->getStatus()->getValue() === OccurrenceStatus::RESOLVED || $occurrence->getStatus()->getValue() === OccurrenceStatus::CLOSED) {
+            } else {
                 $resolvedOccurrencesCount++;
             }
         }
@@ -46,5 +46,30 @@ class DashboardService
             $openOccurrencesCount,
             $resolvedOccurrencesCount
             );
+    }
+
+    public function getChartData(null|int|array $sectorIds = null): array
+    {
+        $now = new \DateTimeImmutable();
+        $year = (int)$now->format('Y');
+
+        if (is_int($sectorIds)) {
+            $sectorIds = [$sectorIds];
+        }
+
+        $barData = $this->occurrenceRepository->getMonthlyInfractionStats($year, $sectorIds);
+
+        return [
+            'status' => 'success',
+            'summary' => [
+                'today' => $this->occurrenceRepository->countDaily($now, $sectorIds),
+                'week' => $this->occurrenceRepository->countWeekly($now, $sectorIds),
+                'month' => $this->occurrenceRepository->countMonthly($now, $sectorIds),
+                'total_students' => count($this->employeeRepository->findAll())
+            ],
+            'bar' => $barData['stats'],
+            'allowed_epis' => $barData['allowed_epis'],
+            'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi($sectorIds)
+        ];
     }
 }

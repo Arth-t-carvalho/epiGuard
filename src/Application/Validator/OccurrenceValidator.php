@@ -2,10 +2,10 @@
 declare(strict_types = 1)
 ;
 
-namespace App\Application\Validator;
+namespace epiGuard\Application\Validator;
 
-use App\Application\DTO\Request\CreateOccurrenceRequest;
-use App\Domain\Exception\ValidationException;
+use epiGuard\Application\DTO\Request\CreateOccurrenceRequest;
+use epiGuard\Domain\Exception\ValidationException;
 
 class OccurrenceValidator
 {
