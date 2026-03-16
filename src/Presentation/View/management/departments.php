@@ -17,12 +17,12 @@ $extraHead = '
         .setor-header .page-title h1 {
             font-size: 22px;
             font-weight: 800;
-            color: #1F2937;
+            color: var(--secondary);
         }
 
         .setor-header .page-title p {
             font-size: 13px;
-            color: #94a3b8;
+            color: var(--text-muted);
             margin-top: 4px;
         }
 
@@ -60,8 +60,8 @@ $extraHead = '
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 10px 16px;
             min-width: 280px;
@@ -83,7 +83,7 @@ $extraHead = '
             outline: none;
             font-size: 13px;
             font-family: "Inter", sans-serif;
-            color: #1F2937;
+            color: var(--text-main);
             width: 100%;
             background: transparent;
         }
@@ -94,12 +94,12 @@ $extraHead = '
 
         .setor-filters select {
             padding: 10px 16px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
             border-radius: 10px;
             font-size: 13px;
             font-family: "Inter", sans-serif;
-            color: #1F2937;
-            background: #fff;
+            color: var(--text-main);
+            background: var(--bg-card);
             cursor: pointer;
             outline: none;
             transition: 0.2s;
@@ -112,9 +112,9 @@ $extraHead = '
 
         /* Tabela */
         .setor-table-wrapper {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 16px;
-            border: 1px solid #f0f0f5;
+            border: 1px solid var(--border);
             overflow: hidden;
         }
 
@@ -139,12 +139,12 @@ $extraHead = '
         }
 
         .setor-table tbody tr:hover {
-            background: #fafbfc;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .setor-table tbody td {
             padding: 18px 24px;
-            border-bottom: 1px solid #f5f5f8;
+            border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
 
@@ -155,7 +155,7 @@ $extraHead = '
         .setor-nome {
             font-size: 14px;
             font-weight: 700;
-            color: #1F2937;
+            color: var(--text-main);
         }
 
         .setor-desc {
@@ -167,7 +167,7 @@ $extraHead = '
         .setor-count {
             font-size: 15px;
             font-weight: 700;
-            color: #1F2937;
+            color: var(--text-main);
         }
 
         .epi-icons {
@@ -179,12 +179,12 @@ $extraHead = '
             width: 30px;
             height: 30px;
             border-radius: 8px;
-            background: #f1f5f9;
+            background: var(--primary-light);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px;
-            color: #475569;
+            color: var(--text-muted);
             transition: 0.2s;
         }
 
@@ -296,13 +296,14 @@ $extraHead = '
         }
 
         .modal-setor {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 18px;
             padding: 32px;
             width: 520px;
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
             animation: dropIn 0.3s ease;
         }
 
@@ -328,7 +329,7 @@ $extraHead = '
         .modal-setor-header h2 {
             font-size: 18px;
             font-weight: 800;
-            color: #1F2937;
+            color: var(--secondary);
         }
 
         .modal-close-btn {
@@ -354,21 +355,21 @@ $extraHead = '
             display: block;
             font-size: 13px;
             font-weight: 700;
-            color: #1F2937;
+            color: var(--text-main);
             margin-bottom: 8px;
         }
 
         .form-input {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
             border-radius: 10px;
             font-size: 14px;
             font-family: "Inter", sans-serif;
-            color: #1F2937;
+            color: var(--text-main);
             outline: none;
             transition: 0.2s;
-            background: #fff;
+            background: var(--bg-card);
         }
 
         .form-input::placeholder {
@@ -419,11 +420,11 @@ $extraHead = '
             align-items: center;
             gap: 12px;
             padding: 14px 16px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border);
             border-radius: 12px;
             cursor: pointer;
             transition: 0.2s;
-            background: #fff;
+            background: var(--bg-card);
         }
 
         .epi-card:hover {
@@ -439,13 +440,13 @@ $extraHead = '
         .epi-card-icon {
             width: 36px;
             height: 36px;
-            background: #f1f5f9;
+            background: var(--primary-light);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            color: #475569;
+            color: var(--text-muted);
         }
 
         .epi-card.selected .epi-card-icon {
@@ -456,7 +457,7 @@ $extraHead = '
         .epi-card-info .epi-card-name {
             font-size: 13px;
             font-weight: 700;
-            color: #1F2937;
+            color: var(--text-main);
         }
 
         .epi-card-info .epi-card-brands {

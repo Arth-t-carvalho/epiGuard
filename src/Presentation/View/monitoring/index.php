@@ -16,7 +16,7 @@ $extraHead = '
         .monitoring-title h1 {
             font-size: 24px;
             font-weight: 800;
-            color: #1F2937;
+            color: var(--secondary);
         }
 
         .prototype-badge {
@@ -54,7 +54,7 @@ $extraHead = '
             position: relative;
             aspect-ratio: 16 / 9;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 2px solid #1f2937;
+            border: 2px solid var(--border);
             transition: transform 0.3s, border-color 0.3s;
         }
 
@@ -169,8 +169,8 @@ $extraHead = '
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #475569;
-            background: #111827;
+            color: var(--text-muted);
+            background: #0f172a;
         }
 
         .camera-empty i {
@@ -194,7 +194,7 @@ ob_start();
     <div class="monitoring-header">
         <div class="monitoring-title">
             <h1>Monitoramento em Tempo Real</h1>
-            <p style="color: #64748B; font-size: 13px; margin-top: 4px;">Supervisão de segurança via câmeras inteligentes</p>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Supervisão de segurança via câmeras inteligentes</p>
         </div>
         <div class="prototype-badge">
             <i data-lucide="beaker"></i>

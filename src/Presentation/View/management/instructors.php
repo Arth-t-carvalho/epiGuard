@@ -98,7 +98,7 @@ ob_start();
                 <tr>
                     <td style="font-weight:600;">Ricardo Mendes</td>
                     <td>ricardo.mendes</td>
-                    <td><span style="background:#eff6ff; color:#3b82f6; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600;">Super Admin</span></td>
+                    <td><span style="background: var(--primary-light); color: #3b82f6; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600;">Super Admin</span></td>
                     <td>—</td>
                     <td>Integral</td>
                     <td><span class="status-dot resolved"></span> Ativo</td>

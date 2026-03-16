@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/sidebar.css">
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/management.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/theme.css">
+    <script>
+        // Aplicar tema imediatamente para evitar flash
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <?= $extraHead ?? '' ?>
 </head>

@@ -13,9 +13,9 @@
         </button>
 
         <!-- Configurações -->
-        <button class="header-icon-btn">
+        <a href="<?= BASE_PATH ?>/settings" class="header-icon-btn" title="Configurações">
             <i data-lucide="settings"></i>
-        </button>
+        </a>
 
         <button class="btn-export">
             <i class="fa-solid fa-download"></i> Exportar

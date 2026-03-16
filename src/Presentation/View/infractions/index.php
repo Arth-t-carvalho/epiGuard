@@ -59,7 +59,7 @@ ob_start();
 
     <!-- Filters -->
     <form action="<?= BASE_PATH ?>/infractions" method="GET" class="filter-bar">
-        <input type="text" name="search" id="searchInput" placeholder="🔍 Buscar funcionário ou setor..." value="<?= htmlspecialchars($filters['search']) ?>">
+        <input type="text" name="search" id="searchInput" placeholder="Buscar funcionário ou setor..." value="<?= htmlspecialchars($filters['search']) ?>">
         <select name="periodo" id="filterPeriodo">
             <option value="todos" <?= $filters['periodo'] === 'todos' ? 'selected' : '' ?>>Todos os períodos</option>
             <option value="hoje" <?= $filters['periodo'] === 'hoje' ? 'selected' : '' ?>>Hoje</option>

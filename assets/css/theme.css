@@ -1,0 +1,227 @@
+/* =========================================
+   SISTEMA DE TEMAS (CLARO / ESCURO)
+   ========================================= */
+
+:root {
+    /* TEMA CLARO (Padrão) */
+    --primary: #E30613;
+    --primary-dark: #bf040f;
+    --primary-light: rgba(227, 6, 19, 0.1);
+    --secondary: #1F2937;
+    --text-main: #111827;
+    --text-muted: #64748B;
+    --bg-body: #e6e8ec;
+    --bg-card: #ebebeb;
+    --border: #CBD5E1;
+    --success: #10B981;
+    --danger: #EF4444;
+    --radius: 16px;
+    --white: #ffffff;
+}
+
+[data-theme="dark"] {
+    /* TEMA ESCURO */
+    --secondary: #f9fafb;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --border: #334155;
+    --white: #1e293b;
+
+    /* Ajustes específicos para o tema escuro */
+    --primary-light: rgba(227, 6, 19, 0.2);
+}
+
+/* Aplicação Global das Variáveis */
+body {
+    background-color: var(--bg-body) !important;
+    color: var(--text-main);
+}
+
+.app-wrapper {
+    background-color: var(--bg-body);
+}
+
+.main-content {
+    background-color: var(--bg-body);
+}
+
+.card,
+.table-card,
+.summary-card {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+    color: var(--text-main);
+}
+
+/* Transição suave para todos os elementos que dependem de variáveis de cores */
+body,
+aside,
+header,
+.card,
+.nav-item,
+button,
+input,
+.main-content,
+.app-wrapper {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Ajustes globais para Dark Mode */
+[data-theme="dark"] body {
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .btn-export,
+[data-theme="dark"] .header-icon-btn,
+[data-theme="dark"] .user-profile-trigger,
+[data-theme="dark"] .ai-toggle-btn {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .ai-chat-window {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .ai-chat-header {
+    background: #0f172a;
+    border-bottom-color: var(--border);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .ai-message.bot {
+    background: #334155;
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .ai-chat-input {
+    background: var(--bg-card);
+    border-top-color: var(--border);
+}
+
+[data-theme="dark"] .ai-chat-input input {
+    background: #334155;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .nav-item.active {
+    background: #334155 !important;
+}
+
+[data-theme="dark"] .kpi-card .badge {
+    box-shadow: none;
+}
+
+/* Tabelas e Cartões de Gestão */
+[data-theme="dark"] .data-table th {
+    background: #0f172a;
+    border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .data-table td {
+    border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .data-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .btn-action {
+    background: #1e293b;
+}
+
+[data-theme="dark"] .filter-bar input,
+[data-theme="dark"] .filter-bar select {
+    background: #1e293b;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .summary-icon.red {
+    background: rgba(227, 6, 19, 0.15);
+}
+
+[data-theme="dark"] .summary-icon.amber {
+    background: rgba(245, 158, 11, 0.15);
+}
+
+[data-theme="dark"] .summary-icon.green {
+    background: rgba(22, 163, 74, 0.15);
+}
+
+[data-theme="dark"] .summary-icon.blue {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Modais e Overlays */
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .modal-premium-content {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-premium-header {
+    border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .modal-premium-footer {
+    border-top-color: var(--border);
+}
+
+[data-theme="dark"] #sectorSearchInput {
+    background: #1e293b;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .selection-row {
+    border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .selection-row:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Calendário */
+[data-theme="dark"] .calendar-nav {
+    background: #1e293b;
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .manual-input input {
+    background: #1e293b;
+    border-color: var(--border);
+    color: var(--text-main);
+}
+
+/* Avatar do Usuário - Cores Dinâmicas Invertidas */
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Tema Claro: Fundo Escuro, Letras Brancas */
+[data-theme="light"] .user-avatar {
+    background: #1F2937 !important;
+    color: #ffffff !important;
+}
+
+/* Tema Escuro: Fundo Branco, Letras Escuras */
+[data-theme="dark"] .user-avatar {
+    background: #ffffff !important;
+    color: #1F2937 !important;
+}

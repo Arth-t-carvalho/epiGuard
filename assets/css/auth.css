@@ -3,8 +3,8 @@
     --facchini-dark-red: #8b1418;
     --sidebar-bg: #2d2d2d;
     --white: #FFFFFF;
-    --bg-light: #f8fafc;
-    --text-dark: #1a1d23;
+    --bg-light: var(--bg-body);
+    --text-dark: var(--text-main);
     --text-muted: #64748b;
     --login-btn: #ce1709;
 }

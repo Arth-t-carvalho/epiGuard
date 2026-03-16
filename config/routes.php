@@ -5,6 +5,7 @@ use epiGuard\Presentation\Controller\DashboardController;
 use epiGuard\Presentation\Controller\InfractionController;
 use epiGuard\Presentation\Controller\ManagementController;
 use epiGuard\Presentation\Controller\OccurrenceController;
+use epiGuard\Presentation\Controller\SettingsController;
 
 return [
     '/login' => [AuthController::class, 'index'],
@@ -21,6 +22,7 @@ return [
     '/management/departments' => [ManagementController::class, 'departments'],
     '/management/employees' => [ManagementController::class, 'employees'],
     '/management/instructors' => [ManagementController::class, 'instructors'],
+    '/settings' => [SettingsController::class, 'index'],
     '/api/departments' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'index'],
     '/api/departments/create' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'create'],
     '/api/departments/update' => [\epiGuard\Presentation\Controller\Api\DepartmentApiController::class, 'update'],
