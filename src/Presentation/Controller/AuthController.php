@@ -57,11 +57,6 @@ class AuthController
                 $mappedRole = UserRole::OPERATOR;
             } elseif ($cargo === 'GERENTE_SEGURANCA') {
                 $mappedRole = UserRole::MANAGER;
-<<<<<<< HEAD
-=======
-            } elseif ($cargo === 'OPERATOR') {
-                $mappedRole = UserRole::OPERATOR;
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
             }
 
             // Criptografar senha
@@ -134,27 +129,4 @@ class AuthController
             exit;
         }
     }
-<<<<<<< HEAD
-=======
-
-    public function resetPassword()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lógica de recuperação (mockup por enquanto)
-            $_SESSION['success'] = "Se o e-mail estiver cadastrado, você receberá as instruções.";
-            header("Location: " . BASE_PATH . "/login");
-            exit;
-        }
-        require_once __DIR__ . '/../View/auth/reset-password.php';
-    }
-    public function logout()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        session_destroy();
-        header("Location: " . BASE_PATH . "/login");
-        exit;
-    }
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 }

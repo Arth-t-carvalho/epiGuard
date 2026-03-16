@@ -73,7 +73,6 @@ class MySQLDepartmentRepository implements DepartmentRepositoryInterface
     }
 
     /**
-<<<<<<< HEAD
      * Retorna array associativo com dados do setor e contagem de funcionários
      */
     public function findAllWithStats(): array
@@ -82,43 +81,6 @@ class MySQLDepartmentRepository implements DepartmentRepositoryInterface
                        (SELECT COUNT(*) FROM funcionarios WHERE setor_id = s.id) as total_funcionarios
                 FROM setores s 
                 ORDER BY s.nome ASC";
-=======
-     * Retorna array associativo com dados do setor, contagem de funcionários e cálculo de risco
-     */
-    public function findAllWithStats(array $filters = []): array
-    {
-        $sql = "SELECT s.id, s.nome, s.sigla, s.status, s.epis_json, s.criado_em, s.atualizado_em, 
-                       (SELECT COUNT(*) FROM funcionarios WHERE setor_id = s.id) as total_funcionarios,
-                       COALESCE(risk_data.risk_p, 0) as risk_p
-                FROM setores s 
-                LEFT JOIN (
-                    SELECT f_calc.setor_id, 
-                           (COUNT(DISTINCT occ_calc.funcionario_id) / 
-                            NULLIF((SELECT COUNT(*) FROM funcionarios f_total WHERE f_total.setor_id = f_calc.setor_id), 0) * 100) as risk_p
-                    FROM funcionarios f_calc
-                    JOIN ocorrencias occ_calc ON f_calc.id = occ_calc.funcionario_id
-                    WHERE occ_calc.tipo = 'INFRACAO'
-                    GROUP BY f_calc.setor_id
-                ) as risk_data ON s.id = risk_data.setor_id
-                WHERE 1=1";
-
-        if (!empty($filters['status']) && $filters['status'] !== 'todos') {
-            $sql .= " AND s.status = '" . ($filters['status'] === 'ativo' ? 'ATIVO' : 'INATIVO') . "'";
-        }
-
-        if (!empty($filters['risk']) && $filters['risk'] !== 'todos') {
-            if ($filters['risk'] === 'baixo') {
-                $sql .= " AND (risk_data.risk_p < 5 OR risk_data.risk_p IS NULL)";
-            } elseif ($filters['risk'] === 'medio') {
-                $sql .= " AND risk_data.risk_p >= 5 AND risk_data.risk_p < 10";
-            } elseif ($filters['risk'] === 'alto') {
-                $sql .= " AND risk_data.risk_p >= 10";
-            }
-        }
-
-        $sql .= " ORDER BY s.nome ASC";
-        
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         $result = $this->db->query($sql);
         $data = [];
 
@@ -156,11 +118,7 @@ class MySQLDepartmentRepository implements DepartmentRepositoryInterface
 
     public function delete(Department $department): void
     {
-<<<<<<< HEAD
         $stmt = $this->db->prepare("DELETE FROM setores WHERE id = ?");
-=======
-        $stmt = $this->db->prepare("UPDATE setores SET status = 'INATIVO' WHERE id = ?");
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         $id = $department->getId();
         $stmt->bind_param('i', $id);
         $stmt->execute();

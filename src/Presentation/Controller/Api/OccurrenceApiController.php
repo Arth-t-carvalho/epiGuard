@@ -30,14 +30,7 @@ class OccurrenceApiController
         
         $month = (int) ($_GET['month'] ?? date('n'));
         $year = (int) ($_GET['year'] ?? date('Y'));
-<<<<<<< HEAD
         $sectorId = isset($_GET['sector_id']) && $_GET['sector_id'] !== 'all' ? (int)$_GET['sector_id'] : null;
-=======
-        $sectorIds = null;
-        if (isset($_GET['sector_id']) && $_GET['sector_id'] !== 'all') {
-            $sectorIds = array_map('intval', explode(',', $_GET['sector_id']));
-        }
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
 
         // Visão Empresarial: Filtro de Setor Dinâmico
         $db = Connection::getInstance();
@@ -56,28 +49,15 @@ class OccurrenceApiController
             WHERE MONTH(o.data_hora) = ? AND YEAR(o.data_hora) = ?
         ";
 
-<<<<<<< HEAD
         if ($sectorId) {
             $query .= " AND s.id = ?";
-=======
-        if (!empty($sectorIds)) {
-            $placeholders = implode(',', array_fill(0, count($sectorIds), '?'));
-            $query .= " AND s.id IN ($placeholders)";
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         }
 
         $query .= " ORDER BY o.data_hora ASC";
 
         $stmt = $db->prepare($query);
-<<<<<<< HEAD
         if ($sectorId) {
             $stmt->bind_param('iii', $month, $year, $sectorId);
-=======
-        if (!empty($sectorIds)) {
-            $types = 'ii' . str_repeat('i', count($sectorIds));
-            $params = array_merge([$month, $year], $sectorIds);
-            $stmt->bind_param($types, ...$params);
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         } else {
             $stmt->bind_param('ii', $month, $year);
         }
@@ -95,14 +75,7 @@ class OccurrenceApiController
         
         $month = (int) ($_GET['month'] ?? date('n'));
         $year = (int) ($_GET['year'] ?? date('Y'));
-<<<<<<< HEAD
         $sectorId = isset($_GET['sector_id']) && $_GET['sector_id'] !== 'all' ? (int)$_GET['sector_id'] : null;
-=======
-        $sectorIds = null;
-        if (isset($_GET['sector_id']) && $_GET['sector_id'] !== 'all') {
-            $sectorIds = array_map('intval', explode(',', $_GET['sector_id']));
-        }
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         $epiName = $_GET['epi'] ?? '';
 
         $db = Connection::getInstance();
@@ -112,34 +85,20 @@ class OccurrenceApiController
                 DATE_FORMAT(o.data_hora, '%d/%m/%Y') AS data, 
                 f.nome AS aluno, 
                 f.id AS aluno_id, 
-<<<<<<< HEAD
                 s.nome AS curso,
-=======
-                IFNULL(s.nome, 'Sem Setor') AS curso,
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
                 e.nome AS epis, 
                 DATE_FORMAT(o.data_hora, '%H:%i') AS hora,
                 'Pendente' AS status_formatado
             FROM ocorrencias o
             JOIN funcionarios f ON o.funcionario_id = f.id
-<<<<<<< HEAD
             JOIN setores s ON f.setor_id = s.id
-=======
-            LEFT JOIN setores s ON f.setor_id = s.id
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
             JOIN ocorrencia_epis oe ON o.id = oe.ocorrencia_id
             JOIN epis e ON oe.epi_id = e.id
             WHERE MONTH(o.data_hora) = ? AND YEAR(o.data_hora) = ?
         ";
 
-<<<<<<< HEAD
         if ($sectorId) {
             $query .= " AND s.id = ?";
-=======
-        if (!empty($sectorIds)) {
-            $placeholders = implode(',', array_fill(0, count($sectorIds), '?'));
-            $query .= " AND s.id IN ($placeholders)";
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         }
         if (!empty($epiName)) {
             $query .= " AND e.nome = ?";
@@ -149,7 +108,6 @@ class OccurrenceApiController
 
         $stmt = $db->prepare($query);
         
-<<<<<<< HEAD
         if ($sectorId && !empty($epiName)) {
             $stmt->bind_param('iiis', $month, $year, $sectorId, $epiName);
         } elseif ($sectorId) {
@@ -159,21 +117,6 @@ class OccurrenceApiController
         } else {
             $stmt->bind_param('ii', $month, $year);
         }
-=======
-        $types = "ii";
-        $params = [$month, $year];
-        
-        if (!empty($sectorIds)) {
-            $types .= str_repeat('i', count($sectorIds));
-            $params = array_merge($params, $sectorIds);
-        }
-        if (!empty($epiName)) {
-            $types .= 's';
-            $params[] = $epiName;
-        }
-        
-        $stmt->bind_param($types, ...$params);
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         
         $stmt->execute();
         $result = $stmt->get_result();

@@ -48,16 +48,11 @@ class DashboardService
             );
     }
 
-<<<<<<< HEAD
     public function getChartData(?int $sectorId = null): array
-=======
-    public function getChartData(null|int|array $sectorIds = null): array
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
     {
         $now = new \DateTimeImmutable();
         $year = (int)$now->format('Y');
 
-<<<<<<< HEAD
         return [
             'status' => 'success',
             'summary' => [
@@ -68,25 +63,6 @@ class DashboardService
             ],
             'bar' => $this->occurrenceRepository->getMonthlyInfractionStats($year, $sectorId),
             'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi($sectorId)
-=======
-        if (is_int($sectorIds)) {
-            $sectorIds = [$sectorIds];
-        }
-
-        $barData = $this->occurrenceRepository->getMonthlyInfractionStats($year, $sectorIds);
-
-        return [
-            'status' => 'success',
-            'summary' => [
-                'today' => $this->occurrenceRepository->countDaily($now, $sectorIds),
-                'week' => $this->occurrenceRepository->countWeekly($now, $sectorIds),
-                'month' => $this->occurrenceRepository->countMonthly($now, $sectorIds),
-                'total_students' => count($this->employeeRepository->findAll())
-            ],
-            'bar' => $barData['stats'],
-            'allowed_epis' => $barData['allowed_epis'],
-            'doughnut' => $this->occurrenceRepository->getInfractionDistributionByEpi($sectorIds)
->>>>>>> 5399806b2ad2a0f0a03798f8626547fceabfaeb9
         ];
     }
 }
